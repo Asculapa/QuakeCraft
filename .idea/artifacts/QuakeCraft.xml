@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="QuakeCraft">
+    <output-path>$PROJECT_DIR$/../minecaraft/plugins</output-path>
+    <root id="archive" name="QuakeCraft.jar">
+      <element id="module-output" name="QuakeCraft" />
+    </root>
+  </artifact>
+</component>
