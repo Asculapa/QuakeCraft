@@ -24,11 +24,9 @@ public class SpawnBlock implements BehaviorBlock {
     private Location blockLocation;
     private Location spawnLocation;
     private World world;
-    private Plugin plugin;
     private boolean wait = true;
 
-    public SpawnBlock(Plugin plugin,Block block,String name) {
-        this.plugin = plugin;
+    public SpawnBlock(Block block,String name) {
         this.block = block;
         this.name = name;
         this.world = block.getWorld();
@@ -56,7 +54,7 @@ public class SpawnBlock implements BehaviorBlock {
     }
 
     @Override
-    public boolean buildBehavior() {
+    public boolean buildBehavior(Plugin plugin) {
         try {
             taskID = scheduler.scheduleSyncRepeatingTask(plugin, () -> {
                 if (!itemAbsent() && wait) {

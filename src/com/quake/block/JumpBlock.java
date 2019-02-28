@@ -1,13 +1,65 @@
 package com.quake.block;
 
-public class JumpBlock implements BehaviorBlock {
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EnderPearl;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Vector;
+
+public class JumpBlock implements BehaviorBlock, Listener {
+
+    private Block block;
+    private String name;
+    private Vector eyeDirection;
+    private double power;
+    private Plugin plugin;
+
+    public JumpBlock(Player player, double power,String name) {
+        this.block = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+        this.eyeDirection = player.getEyeLocation().getDirection();
+        this.power = power;
+        this.name = name;
+    }
+
     @Override
-    public boolean buildBehavior() {
-        return false;
+    public boolean buildBehavior(Plugin plugin) {
+        this.plugin = plugin;
+        this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
+        return true;
     }
 
     @Override
     public boolean removeBehavior() {
-        return false;
+        if (plugin != null) {
+            PlayerPortalEvent.getHandlerList().unregister(this);
+            PlayerMoveEvent.getHandlerList().unregister(this);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @EventHandler
+    private void onTeleport(PlayerTeleportEvent event) {
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+            event.setCancelled(true);
+            event.getPlayer().leaveVehicle();
+        }
+    }
+
+    @EventHandler
+    private void onPlyerMove(PlayerMoveEvent event) {
+        if (event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block)) {
+            Player player = event.getPlayer();
+            EnderPearl ep = player.launchProjectile(EnderPearl.class, eyeDirection);
+            ep.addPassenger(player);
+        }
     }
 }
+
