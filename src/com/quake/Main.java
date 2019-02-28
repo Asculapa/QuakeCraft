@@ -54,8 +54,9 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        SpawnBlock spawnBlock = new SpawnBlock(((Player)sender).getLocation().getBlock().getRelative(BlockFace.DOWN),this);
+        SpawnBlock spawnBlock = new SpawnBlock(this,((Player)sender).getLocation().getBlock().getRelative(BlockFace.DOWN),"First");
         spawnBlock.setItemStack(new ItemStack(Material.WRITTEN_BOOK));
+        spawnBlock.setDelay(200);
         spawnBlock.buildBehavior();
         return false;
     }

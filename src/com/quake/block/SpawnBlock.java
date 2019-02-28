@@ -2,6 +2,7 @@ package com.quake.block;
 
 import com.quake.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,10 +14,10 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 public class SpawnBlock implements BehaviorBlock {
-    private int id;
+    private String name;
     private ItemStack itemStack;
     private Item item;
-    private long delay = 200;
+    private long delay;
     private Block block;
     private BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
     private int taskID;
@@ -26,13 +27,16 @@ public class SpawnBlock implements BehaviorBlock {
     private Plugin plugin;
     private boolean wait = true;
 
-    public SpawnBlock(Block block, Plugin plugin) {
-        this.block = block;
+    public SpawnBlock(Plugin plugin,Block block,String name) {
         this.plugin = plugin;
+        this.block = block;
+        this.name = name;
         this.world = block.getWorld();
         this.blockLocation = block.getLocation();
-        spawnLocation = blockLocation;
-        spawnLocation.add(0.5d, 1, 0.5d);
+        this.spawnLocation = blockLocation;
+        this.spawnLocation.add(0.5d, 1, 0.5d);
+        this.delay = 250;
+        this. itemStack = new ItemStack(Material.WRITTEN_BOOK);
     }
 
     public void setItemStack(ItemStack itemStack) {
@@ -47,8 +51,8 @@ public class SpawnBlock implements BehaviorBlock {
         return block;
     }
 
-    public int getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -80,7 +84,7 @@ public class SpawnBlock implements BehaviorBlock {
                 scheduler.cancelTask(taskID);
                 return true;
             } catch (Exception e) {
-                Main.log.info("BlockSpawn " + id + "not removed");
+                Main.log.info("BlockSpawn " + name + "not removed");
                 return false;
             }
         }
