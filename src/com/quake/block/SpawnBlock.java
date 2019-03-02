@@ -2,6 +2,7 @@ package com.quake.block;
 
 import com.quake.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -16,7 +17,7 @@ public class SpawnBlock implements BehaviorBlock {
     private String name;
     private ItemStack itemStack;
     private Item item;
-    private long delay;
+    private int delay;
     private Block block;
     private BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
     private int taskID;
@@ -32,13 +33,14 @@ public class SpawnBlock implements BehaviorBlock {
         this.spawnLocation.add(0.5d, 1, 0.5d);
         this.delay = delay;
         this.itemStack = itemStack;
+        new ItemStack(Material.getMaterial("AIR"));
     }
 
     public void setItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
-    public void setDelay(long delay) {
+    public void setDelay(int delay) {
         this.delay = delay;
     }
 
@@ -48,6 +50,14 @@ public class SpawnBlock implements BehaviorBlock {
 
     public String getName() {
         return name;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    public int getDelay() {
+        return delay;
     }
 
     @Override

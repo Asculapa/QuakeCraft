@@ -1,6 +1,9 @@
 package com.quake;
 
 import com.quake.block.JumpBlock;
+import com.quake.block.SpawnBlock;
+import com.quake.сonfig.ReadConfig;
+import com.quake.сonfig.WriteConfig;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -23,7 +27,21 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     @Override
     public void onEnable() {
         this.getLogger().info("Quake!");
+        world = this.getServer().getWorld("world");
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
+        ReadConfig readConfig = new ReadConfig(this);
+        for (SpawnBlock s: readConfig.getSpawnBlocks()){
+            s.buildBehavior(this);
+        }
+       /* for (SpawnBlock block : config.getSpawnBlocks()){
+
+            log.info("Name - " + block.getName());
+
+            log.info("X - " + block.getBlock().getX());
+            log.info("Y - " + block.getBlock().getY());
+            log.info("Z - " + block.getBlock().getZ());
+            block.buildBehavior(this);
+        }*/
     }
 
     @Override
