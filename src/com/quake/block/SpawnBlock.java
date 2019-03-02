@@ -2,7 +2,6 @@ package com.quake.block;
 
 import com.quake.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -21,20 +20,18 @@ public class SpawnBlock implements BehaviorBlock {
     private Block block;
     private BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
     private int taskID;
-    private Location blockLocation;
     private Location spawnLocation;
     private World world;
     private boolean wait = true;
 
-    public SpawnBlock(Block block,String name) {
+    public SpawnBlock(Block block, int delay, ItemStack itemStack, String name) {
         this.block = block;
         this.name = name;
         this.world = block.getWorld();
-        this.blockLocation = block.getLocation();
-        this.spawnLocation = blockLocation;
+        this.spawnLocation = block.getLocation();
         this.spawnLocation.add(0.5d, 1, 0.5d);
-        this.delay = 250;
-        this. itemStack = new ItemStack(Material.WRITTEN_BOOK);
+        this.delay = delay;
+        this.itemStack = itemStack;
     }
 
     public void setItemStack(ItemStack itemStack) {
