@@ -1,7 +1,7 @@
 package com.quake.сonfig;
 
 import com.quake.Main;
-import com.quake.block.SpawnBlock;
+import com.quake.block.BehaviorBlock;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class WriteConfig extends AbstractConfig {
@@ -10,19 +10,11 @@ public class WriteConfig extends AbstractConfig {
         super(main);
     }
 
-    //TODO replace SpawnBlock -> BehaviorBlock
-    public boolean addSpawnBlock(SpawnBlock block) {
+    public boolean addBehaviorBlock(BehaviorBlock block) {
         try {
-
-            ConfigurationSection blockSection = configuration.getConfigurationSection("SpawnBlocks");
+            ConfigurationSection blockSection = configurationSection(block.getBlockClass() + "s", block.getName());
 
             if (blockSection == null) {
-                configuration.createSection("SpawnBlocks");
-                blockSection = configuration.getConfigurationSection("SpawnBlocks");
-            }
-
-            if (blockSection.getConfigurationSection(block.getName()) != null) {
-                Main.log.info(block.getName() + " exists!");
                 return false;
             }
 
@@ -30,8 +22,8 @@ public class WriteConfig extends AbstractConfig {
             newBlock.set("x", block.getBlock().getX());
             newBlock.set("y", block.getBlock().getY());
             newBlock.set("z", block.getBlock().getZ());
-            newBlock.set("delay", block.getDelay());
-            newBlock.set("itemStack", block.getItemStack());
+
+            block.setSpecificArgs(newBlock);
 
             saveConfig();
             return true;
@@ -40,6 +32,30 @@ public class WriteConfig extends AbstractConfig {
             Main.log.info("I can't write block " + block.getName());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private ConfigurationSection configurationSection(String section, String block) {
+        try {
+
+            ConfigurationSection blockSection = configuration.getConfigurationSection(section);
+
+            if (blockSection == null) {
+                configuration.createSection(section);
+                blockSection = configuration.getConfigurationSection(section);
+            }
+
+            if (blockSection.getConfigurationSection(block) != null) {
+                Main.log.info(block + " exists!");
+                return null;
+            }
+
+            return blockSection;
+
+        } catch (Exception e) {
+            Main.log.info("Some problems with section " + section);
+            e.printStackTrace();
+            return null;
         }
     }
 }

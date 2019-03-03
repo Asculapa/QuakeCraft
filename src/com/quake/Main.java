@@ -1,10 +1,12 @@
 package com.quake;
 
+import com.quake.block.BehaviorBlock;
 import com.quake.block.JumpBlock;
 import com.quake.block.SpawnBlock;
 import com.quake.сonfig.ReadConfig;
 import com.quake.сonfig.WriteConfig;
 import org.bukkit.*;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,6 +25,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     public static final String PLUGIN_NAME = "QuakeCraft";
     public static World world;
     public static ArrayList<Listener> listeners = new ArrayList<>();
+    int test;
 
     @Override
     public void onEnable() {
@@ -30,8 +33,13 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         world = this.getServer().getWorld("world");
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         ReadConfig readConfig = new ReadConfig(this);
-        for (SpawnBlock s: readConfig.getSpawnBlocks()){
+        for (BehaviorBlock s: readConfig.getBehaviorBlocks(JumpBlock.class)){
             s.buildBehavior(this);
+            log.info(s.getName() + "/n" + s.getBlock().toString());
+        }
+        for (BehaviorBlock s: readConfig.getBehaviorBlocks(SpawnBlock.class)){
+            s.buildBehavior(this);
+            log.info(s.getName() + "/n" + s.getBlock().toString());
         }
        /* for (SpawnBlock block : config.getSpawnBlocks()){
 
@@ -55,9 +63,14 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
       //  spawnBlock.setItemStack(new ItemStack(Material.WRITTEN_BOOK));
       //  spawnBlock.setDelay(200);
       //  spawnBlock.buildBehavior();
-
-      //  JumpBlock jumpBlock = new JumpBlock(((Player)sender),3,"1");
-      //  jumpBlock.buildBehavior(this);
+        Player player = (Player) sender;
+        JumpBlock jumpBlock = new JumpBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),null,10,"234d" + ++test);
+        jumpBlock.buildBehavior(this);
+        SpawnBlock spawnBlock = new SpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),20,new ItemStack(Material.IRON_SWORD),"Hohoh"+ ++test);
+        spawnBlock.buildBehavior(this);
+        WriteConfig w = new WriteConfig(this);
+        w.addBehaviorBlock(jumpBlock);
+        w.addBehaviorBlock(spawnBlock);
         return false;
     }
 }
