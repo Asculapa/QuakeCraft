@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-public class SpawnBlock implements BehaviorBlock {
+public class ItemSpawnBlock implements BehaviorBlock {
     private String name;
     private ItemStack itemStack;
     private Item item;
@@ -25,9 +25,9 @@ public class SpawnBlock implements BehaviorBlock {
     private World world;
     private boolean wait = true;
 
-    public SpawnBlock(){}
+    public ItemSpawnBlock(){}
 
-    public SpawnBlock(Block block, int delay, ItemStack itemStack, String name) {
+    public ItemSpawnBlock(Block block, int delay, ItemStack itemStack, String name) {
         this.block = block;
         this.name = name;
         this.world = block.getWorld();
@@ -66,7 +66,7 @@ public class SpawnBlock implements BehaviorBlock {
         try {
             int delay = section.getInt("delay");
             ItemStack itemStack = section.getItemStack("itemStack");
-            return new SpawnBlock(block, delay, itemStack, name);
+            return new ItemSpawnBlock(block, delay, itemStack, name);
         } catch (Exception e) {
             Main.log.info("I can't create " + getBlockClass());
             e.printStackTrace();
@@ -118,5 +118,4 @@ public class SpawnBlock implements BehaviorBlock {
     private boolean itemAbsent() {
         return item != null && !item.isDead() && item.getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block);
     }
-
 }

@@ -2,8 +2,8 @@ package com.quake.сonfig;
 
 import com.quake.Main;
 import com.quake.block.BehaviorBlock;
+import com.quake.block.PlayerSpawnBlock;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
@@ -23,23 +23,56 @@ public class ReadConfig extends AbstractConfig {
                 return null;
             }
             ConfigurationSection section = configuration.getConfigurationSection(t.getSimpleName() + "s");
+            if (section == null) {
+                return blocks;
+            }
             Set<String> stringSet = section.getKeys(false);
 
-            for (String name : stringSet){
+            for (String name : stringSet) {
                 Object obj = t.newInstance();
-                BehaviorBlock block = ((BehaviorBlock)obj);
+                BehaviorBlock block = ((BehaviorBlock) obj);
                 ConfigurationSection blockSection = section.getConfigurationSection(name);
-                int x = blockSection.getInt("x");
-                int y = blockSection.getInt("y");
-                int z = blockSection.getInt("z");
-                Block blockW = Main.world.getBlockAt(x,y,z);
-                block = block.getInstance(blockSection,blockW,name);
+                Block blockW = getBlock(blockSection);
+                block = block.getInstance(blockSection, blockW, name);
                 blocks.add(block);
             }
 
             return blocks;
-        }catch (Exception e){
+        } catch (Exception e) {
             Main.log.info("I can't load " + t.getSimpleName());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Block getBlock(ConfigurationSection section) {
+        try {
+            int x = section.getInt("x");
+            int y = section.getInt("y");
+            int z = section.getInt("z");
+            return Main.world.getBlockAt(x, y, z);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<PlayerSpawnBlock> getPlayerSpawnBlocks() {
+        try {
+            ArrayList<PlayerSpawnBlock> playerSpawnBlocks = new ArrayList<>();
+            ConfigurationSection section = configuration.getConfigurationSection(PlayerSpawnBlock.class.getSimpleName() + "s");
+            if (section == null) {
+                return playerSpawnBlocks;
+            }
+            Set<String> stringSet = section.getKeys(false);
+            for (String name : stringSet) {
+                Block block = getBlock(section.getConfigurationSection(name));
+                PlayerSpawnBlock playerSpawnBlock = new PlayerSpawnBlock(block, name);
+                playerSpawnBlocks.add(playerSpawnBlock);
+            }
+            return playerSpawnBlocks;
+        } catch (Exception e) {
+            Main.log.info("I can't load " + PlayerSpawnBlock.class.getSimpleName());
             e.printStackTrace();
             return null;
         }

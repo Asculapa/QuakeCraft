@@ -2,7 +2,10 @@ package com.quake.сonfig;
 
 import com.quake.Main;
 import com.quake.block.BehaviorBlock;
+import com.quake.block.PlayerSpawnBlock;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 public class WriteConfig extends AbstractConfig {
 
@@ -18,11 +21,7 @@ public class WriteConfig extends AbstractConfig {
                 return false;
             }
 
-            ConfigurationSection newBlock = blockSection.createSection(block.getName());
-            newBlock.set("x", block.getBlock().getX());
-            newBlock.set("y", block.getBlock().getY());
-            newBlock.set("z", block.getBlock().getZ());
-
+            ConfigurationSection newBlock = blockSection(block.getBlock(), block.getName(), blockSection);
             block.setSpecificArgs(newBlock);
 
             saveConfig();
@@ -56,6 +55,34 @@ public class WriteConfig extends AbstractConfig {
             Main.log.info("Some problems with section " + section);
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private ConfigurationSection blockSection(Block block, String name, ConfigurationSection section) {
+        ConfigurationSection newBlock = section.createSection(name);
+        newBlock.set("x", block.getX());
+        newBlock.set("y", block.getY());
+        newBlock.set("z", block.getZ());
+        return newBlock;
+    }
+
+    public boolean addPlayerSpawnBlock(PlayerSpawnBlock block) {
+        try {
+            ConfigurationSection section = configurationSection(PlayerSpawnBlock.class.getSimpleName() + "s", block.getName());
+
+            if (section == null) {
+                return false;
+            }
+
+            blockSection(block.getBlock(), block.getName(), section);
+
+            saveConfig();
+
+            return true;
+        } catch (Exception e) {
+            Main.log.info("I can't write " + PlayerSpawnBlock.class.getSimpleName() + " - " + block.getName());
+            e.printStackTrace();
+            return false;
         }
     }
 }
