@@ -8,27 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-public class Gun implements Item {
+public class Gun  {
 
-    enum Type {
-        FlareGun,
-        MachineGun
-    }
-
-    @Override
-    public void pickUp(Player player) {
-
-    }
-
-    public void fire(Player player, Type type) {
-
-        switch (type) {
-            case FlareGun:
-
-        }
-    }
-
-    public final Block getTargetBlock(Player player, int range) {
+    private final Block getTargetBlock(Player player, int range) {
         BlockIterator iter = new BlockIterator(player, range);
         Block lastBlock = iter.next();
         while (iter.hasNext()) {

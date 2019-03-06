@@ -4,15 +4,22 @@ import com.quake.block.BehaviorBlock;
 import com.quake.block.ItemSpawnBlock;
 import com.quake.block.JumpBlock;
 import com.quake.block.PlayerSpawnBlock;
+import com.quake.item.Armor;
 import com.quake.сonfig.ReadConfig;
 import com.quake.сonfig.WriteConfig;
+import net.minecraft.server.v1_13_R2.ItemArmor;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -72,10 +79,35 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         WriteConfig w = new WriteConfig(this);
         w.addBehaviorBlock(jumpBlock);
         w.addBehaviorBlock(spawnBlock);*/
-        Player player = (Player) sender;
-        PlayerSpawnBlock spawnBlock = new PlayerSpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),"SpawnBlock" + ++test);
+       Player player = (Player) sender;
+       world.dropItem(player.getLocation(),new ItemStack(Material.getMaterial(Armor.Type.DIAMOND_BOOTS.name())));
+/*        PlayerSpawnBlock spawnBlock = new PlayerSpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),"SpawnBlock" + ++test);
         WriteConfig writeConfig = new WriteConfig(this);
-        writeConfig.addPlayerSpawnBlock(spawnBlock);
+        writeConfig.addPlayerSpawnBlock(spawnBlock);*/
+
         return false;
     }
+
+    @EventHandler
+    public void onEntityPickupItem(EntityPickupItemEvent event){
+        if (CraftItemStack.asNMSCopy(event.getItem().getItemStack()).getItem() instanceof ItemArmor){
+            Player player = (Player) event.getEntity();
+            Armor armor = new Armor();
+            armor.pickUp(player,event.getItem().getItemStack());
+            event.setCancelled(true);
+            event.getItem().remove();
+        }
+    }
+
+/*    @EventHandler
+    public void onEntityDamageEvent(EntityDamageEvent event){
+        if (event.getEntity() instanceof Player) {
+            Player p = (Player)event.getEntity();
+            if (p.getHealth() <= event.getFinalDamage()) {
+                p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                event.setCancelled(true);
+                p.teleport(playerSpawnBlocks.get(0).getBlock().getLocation());
+            }
+        }
+    }*/
 }

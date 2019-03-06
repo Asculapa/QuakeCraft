@@ -1,7 +1,6 @@
 package com.quake.block;
 
 import com.quake.Main;
-import org.bukkit.Effect;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
