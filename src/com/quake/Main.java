@@ -20,9 +20,12 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.*;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
@@ -100,7 +103,6 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         if (!(event.getEntity() instanceof Player)){
             return;
         }
-
         Item item = event.getItem();
         Player player = (Player) event.getEntity();
 
@@ -118,6 +120,31 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         }
     }
 
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event)
+    {
+        final Player p = event.getPlayer();
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            public void run() {
+                ScoreboardManager manager = Bukkit.getScoreboardManager();
+                final Scoreboard board = manager.getNewScoreboard();
+                final Objective objective = board.registerNewObjective("test", "dummy");
+                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+                objective.setDisplayName(ChatColor.RED + "YourScoreboardTitle");
+                Score score = objective.getScore("Score10");
+                score.setScore(10);
+                Score score1 = objective.getScore("Score9");
+                score1.setScore(9);
+                Score score2 = objective.getScore("Score8");
+                score2.setScore(8);
+                Score score3 = objective.getScore("§6Colors");
+                score3.setScore(7);
+                p.setScoreboard(board);
+            }
+        },0, 20 * 10);
+    }
+
+}
 
 /*    @EventHandler
     public void onEntityDamageEvent(EntityDamageEvent event){
@@ -130,4 +157,3 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
             }
         }
     }*/
-}

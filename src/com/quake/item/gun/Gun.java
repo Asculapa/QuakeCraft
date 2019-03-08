@@ -1,4 +1,4 @@
-package com.quake.item;
+package com.quake.item.gun;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
-public class Gun  {
+public abstract class Gun  {
 
     private final Block getTargetBlock(Player player, int range) {
         BlockIterator iter = new BlockIterator(player, range);
