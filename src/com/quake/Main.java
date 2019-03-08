@@ -5,6 +5,7 @@ import com.quake.block.ItemSpawnBlock;
 import com.quake.block.JumpBlock;
 import com.quake.block.PlayerSpawnBlock;
 import com.quake.item.Armor;
+import com.quake.item.Health;
 import com.quake.сonfig.ReadConfig;
 import com.quake.сonfig.WriteConfig;
 import net.minecraft.server.v1_13_R2.ItemArmor;
@@ -15,6 +16,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +26,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import static com.quake.item.Item.valueIsExist;
 
 public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
@@ -80,7 +84,10 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         w.addBehaviorBlock(jumpBlock);
         w.addBehaviorBlock(spawnBlock);*/
        Player player = (Player) sender;
-       world.dropItem(player.getLocation(),new ItemStack(Material.getMaterial(Armor.Type.DIAMOND_BOOTS.name())));
+       Armor armor = new Armor();
+       Health health = new Health();
+       world.dropItem(player.getLocation(),armor.getItem(Armor.Type.DIAMOND_BOOTS));
+        world.dropItem(player.getLocation(),health.getItem(Health.Type.HUGE));
 /*        PlayerSpawnBlock spawnBlock = new PlayerSpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),"SpawnBlock" + ++test);
         WriteConfig writeConfig = new WriteConfig(this);
         writeConfig.addPlayerSpawnBlock(spawnBlock);*/
@@ -90,14 +97,27 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
     @EventHandler
     public void onEntityPickupItem(EntityPickupItemEvent event){
-        if (CraftItemStack.asNMSCopy(event.getItem().getItemStack()).getItem() instanceof ItemArmor){
-            Player player = (Player) event.getEntity();
+        if (!(event.getEntity() instanceof Player)){
+            return;
+        }
+
+        Item item = event.getItem();
+        Player player = (Player) event.getEntity();
+
+        if (valueIsExist(Armor.Type.values(),item.getItemStack().getType().name())){
             Armor armor = new Armor();
             armor.pickUp(player,event.getItem().getItemStack());
             event.setCancelled(true);
-            event.getItem().remove();
+            item.remove();
+        }else if (valueIsExist(Health.Type.values(),item.getItemStack().getItemMeta().getDisplayName())){
+            Health health = new Health();
+            health.pickUp(player,item.getItemStack());
+            event.setCancelled(true);
+            item.remove();
+
         }
     }
+
 
 /*    @EventHandler
     public void onEntityDamageEvent(EntityDamageEvent event){
