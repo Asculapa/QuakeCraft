@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
@@ -86,9 +87,12 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         Armor armor = new Armor();
         Health health = new Health();
         Weapon weapon = new Weapon();
-        Arrow item = player.launchProjectile(Arrow.class,player.getEyeLocation().getDirection().multiply(20));
+        Arrow item = player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
         item.setDamage(999d);
-        world.dropItem(player.getLocation(), weapon.getSword());
+        world.dropItem(player.getLocation(), weapon.getItem(Weapon.Type.DIAMOND_HOE));
+        world.dropItem(player.getLocation(), weapon.getItem(Weapon.Type.DIAMOND_PICKAXE));
+        world.dropItem(player.getLocation(), weapon.getItem(Weapon.Type.DIAMOND_SWORD));
+        world.dropItem(player.getLocation(), weapon.getItem(Weapon.Type.DIAMOND_SHOVEL));
         world.dropItem(player.getLocation(), health.getItem(Health.Type.HUGE));
 /*        PlayerSpawnBlock spawnBlock = new PlayerSpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),"SpawnBlock" + ++test);
         WriteConfig writeConfig = new WriteConfig(this);
@@ -108,27 +112,29 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         if (valueIsExist(Armor.Type.values(), item.getItemStack().getType().name())) {
             Armor armor = new Armor();
             armor.pickUp(player, event.getItem().getItemStack());
-            event.setCancelled(true);
-            item.remove();
 
         } else if (valueIsExist(Health.Type.values(), item.getItemStack().getItemMeta().getDisplayName())) {
             Health health = new Health();
             health.pickUp(player, item.getItemStack());
-            event.setCancelled(true);
-            item.remove();
 
         } else if (valueIsExist(Weapon.Type.values(), item.getItemStack().getType().name())) {
             Weapon weapon = new Weapon();
             weapon.pickUp(player, item.getItemStack());
-            event.setCancelled(true);
-            item.remove();
-
         }
+        event.setCancelled(true);
+        item.remove();
+    }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        event.setCancelled(true);
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        UserInterface.createScoreBoard(event.getPlayer());
+        if (!UserInterface.createScoreBoard(event.getPlayer())) {
+            event.getPlayer().kickPlayer("Developer is fool =/");
+        }
     }
 
 }

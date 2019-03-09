@@ -1,5 +1,6 @@
 package com.quake.item;
 
+import com.quake.UserInterface;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -36,24 +37,53 @@ public class Weapon implements Item {
 
         if (!Item.itemIsExist(player.getInventory(), itemStack)) {
             player.getInventory().addItem(itemStack);
+            return;
+        }
+        if (itemStack.getItemMeta().getDisplayName().equals(Type.DIAMOND_SWORD.toString())) {
+            return;
         }
 
-    /*    switch (Type.valueOf(itemStack.getType().name())){
-            case DIAMOND_SWORD:
-                break;
-        }*/
+        for (Type type : Type.values()){
+            if (itemStack.getItemMeta().getDisplayName().equals(type.toString())){
+                UserInterface.addAmmo(player,type,10);
+            }
+        }
     }
 
     @Override
     public ItemStack getItem(Enum e) {
+        if (!Item.valueIsExist(Type.values(), e.name())) {
+            return null;
+        }
+        switch (Type.valueOf(e.name())) {
+            case DIAMOND_SWORD:
+                return getSword();
+            case DIAMOND_HOE:
+                return getGun(Type.DIAMOND_HOE);
+            case DIAMOND_SHOVEL:
+                return getGun(Type.DIAMOND_SHOVEL);
+            case DIAMOND_PICKAXE:
+                return getGun(Type.DIAMOND_PICKAXE);
+        }
         return null;
     }
 
-    public ItemStack getSword() {
+    private ItemStack getSword() {
         ItemStack itemStack = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = itemStack.getItemMeta();
         meta.addEnchant(Enchantment.KNOCKBACK, 3, true);
-        meta.setLocalizedName(Type.DIAMOND_SWORD.toString());
+        meta.setDisplayName(Type.DIAMOND_SWORD.toString());
+        itemStack.setItemMeta(meta);
+        return itemStack;
+    }
+
+    private ItemStack getGun(Type type) {
+        if (Type.DIAMOND_SWORD == type) {
+            return null;
+        }
+        ItemStack itemStack = new ItemStack(Material.getMaterial(type.name()));
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(type.toString());
         itemStack.setItemMeta(meta);
         return itemStack;
     }
