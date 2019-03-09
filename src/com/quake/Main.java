@@ -6,24 +6,18 @@ import com.quake.block.JumpBlock;
 import com.quake.block.PlayerSpawnBlock;
 import com.quake.item.Armor;
 import com.quake.item.Health;
+import com.quake.item.Weapon;
 import com.quake.сonfig.ReadConfig;
-import com.quake.сonfig.WriteConfig;
-import net.minecraft.server.v1_13_R2.ItemArmor;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
 
@@ -48,11 +42,11 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         ReadConfig readConfig = new ReadConfig(this);
         playerSpawnBlocks = readConfig.getPlayerSpawnBlocks();
         //==============================================================================
-        for (BehaviorBlock s: readConfig.getBehaviorBlocks(JumpBlock.class)){
+        for (BehaviorBlock s : readConfig.getBehaviorBlocks(JumpBlock.class)) {
             s.buildBehavior(this);
             log.info(s.getName() + "/n" + s.getBlock().toString());
         }
-        for (BehaviorBlock s: readConfig.getBehaviorBlocks(ItemSpawnBlock.class)){
+        for (BehaviorBlock s : readConfig.getBehaviorBlocks(ItemSpawnBlock.class)) {
             s.buildBehavior(this);
             log.info(s.getName() + "/n" + s.getBlock().toString());
         }
@@ -74,10 +68,10 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-      //  ItemSpawnBlock spawnBlock = new ItemSpawnBlock(this,((Player)sender).getLocation().getBlock().getRelative(BlockFace.DOWN),"First");
-      //  spawnBlock.setItemStack(new ItemStack(Material.WRITTEN_BOOK));
-      //  spawnBlock.setDelay(200);
-      //  spawnBlock.buildBehavior();
+        //  ItemSpawnBlock spawnBlock = new ItemSpawnBlock(this,((Player)sender).getLocation().getBlock().getRelative(BlockFace.DOWN),"First");
+        //  spawnBlock.setItemStack(new ItemStack(Material.WRITTEN_BOOK));
+        //  spawnBlock.setDelay(200);
+        //  spawnBlock.buildBehavior();
 /*        Player player = (Player) sender;
         JumpBlock jumpBlock = new JumpBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),null,10,"234d" + ++test);
         jumpBlock.buildBehavior(this);
@@ -86,11 +80,13 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         WriteConfig w = new WriteConfig(this);
         w.addBehaviorBlock(jumpBlock);
         w.addBehaviorBlock(spawnBlock);*/
-       Player player = (Player) sender;
-       Armor armor = new Armor();
-       Health health = new Health();
-       world.dropItem(player.getLocation(),armor.getItem(Armor.Type.DIAMOND_BOOTS));
-        world.dropItem(player.getLocation(),health.getItem(Health.Type.HUGE));
+        Player player = (Player) sender;
+        Armor armor = new Armor();
+        Health health = new Health();
+        Weapon weapon = new Weapon();
+
+        world.dropItem(player.getLocation(), weapon.getSword());
+        world.dropItem(player.getLocation(), health.getItem(Health.Type.HUGE));
 /*        PlayerSpawnBlock spawnBlock = new PlayerSpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),"SpawnBlock" + ++test);
         WriteConfig writeConfig = new WriteConfig(this);
         writeConfig.addPlayerSpawnBlock(spawnBlock);*/
@@ -99,21 +95,28 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     }
 
     @EventHandler
-    public void onEntityPickupItem(EntityPickupItemEvent event){
-        if (!(event.getEntity() instanceof Player)){
+    public void onEntityPickupItem(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player)) {
             return;
         }
         Item item = event.getItem();
         Player player = (Player) event.getEntity();
 
-        if (valueIsExist(Armor.Type.values(),item.getItemStack().getType().name())){
+        if (valueIsExist(Armor.Type.values(), item.getItemStack().getType().name())) {
             Armor armor = new Armor();
-            armor.pickUp(player,event.getItem().getItemStack());
+            armor.pickUp(player, event.getItem().getItemStack());
             event.setCancelled(true);
             item.remove();
-        }else if (valueIsExist(Health.Type.values(),item.getItemStack().getItemMeta().getDisplayName())){
+
+        } else if (valueIsExist(Health.Type.values(), item.getItemStack().getItemMeta().getDisplayName())) {
             Health health = new Health();
-            health.pickUp(player,item.getItemStack());
+            health.pickUp(player, item.getItemStack());
+            event.setCancelled(true);
+            item.remove();
+
+        } else if (valueIsExist(Weapon.Type.values(), item.getItemStack().getType().name())) {
+            Weapon weapon = new Weapon();
+            weapon.pickUp(player, item.getItemStack());
             event.setCancelled(true);
             item.remove();
 
@@ -121,27 +124,23 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event)
-    {
+    public void onPlayerJoin(PlayerJoinEvent event) {
         final Player p = event.getPlayer();
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            public void run() {
-                ScoreboardManager manager = Bukkit.getScoreboardManager();
-                final Scoreboard board = manager.getNewScoreboard();
-                final Objective objective = board.registerNewObjective("test", "dummy");
-                objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-                objective.setDisplayName(ChatColor.RED + "YourScoreboardTitle");
-                Score score = objective.getScore("Score10");
-                score.setScore(10);
-                Score score1 = objective.getScore("Score9");
-                score1.setScore(9);
-                Score score2 = objective.getScore("Score8");
-                score2.setScore(8);
-                Score score3 = objective.getScore("§6Colors");
-                score3.setScore(7);
-                p.setScoreboard(board);
-            }
-        },0, 20 * 10);
+            ScoreboardManager manager = Bukkit.getScoreboardManager();
+            final Scoreboard board = manager.getNewScoreboard();
+            final Objective objective = board.registerNewObjective("test", "totalKillCount");
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+            objective.setDisplayName(ChatColor.RED + "YourScoreboardTitle");
+            Score score = objective.getScore("Score10");
+            score.setScore(10);
+            Score score1 = objective.getScore("Score9");
+            score1.setScore(9);
+            Score score2 = objective.getScore("Score8");
+            score2.setScore(8);
+            Score score3 = objective.getScore("§6Colors");
+            score3.setScore(7);
+            p.setScoreboard(board);
+
     }
 
 }
