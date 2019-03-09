@@ -7,19 +7,34 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Weapon implements Item {
-    public enum Type{
+    public enum Type {
         DIAMOND_SWORD {
             @Override
             public String toString() {
                 return "Excalibur";
             }
-        },LASER,ROCKET,SNIPER
+        }, DIAMOND_SHOVEL {
+            @Override
+            public String toString() {
+                return "Ray";
+            }
+        }, DIAMOND_HOE {
+            @Override
+            public String toString() {
+                return "Bazooka";
+            }
+        }, DIAMOND_PICKAXE {
+            @Override
+            public String toString() {
+                return "Blaster";
+            }
+        }
     }
 
     @Override
     public void pickUp(Player player, ItemStack itemStack) {
 
-        if (!Item.itemIsExist(player.getInventory(),itemStack)){
+        if (!Item.itemIsExist(player.getInventory(), itemStack)) {
             player.getInventory().addItem(itemStack);
         }
 
@@ -33,10 +48,11 @@ public class Weapon implements Item {
     public ItemStack getItem(Enum e) {
         return null;
     }
-    public ItemStack getSword(){
+
+    public ItemStack getSword() {
         ItemStack itemStack = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = itemStack.getItemMeta();
-        meta.addEnchant(Enchantment.KNOCKBACK,3,true);
+        meta.addEnchant(Enchantment.KNOCKBACK, 3, true);
         meta.setLocalizedName(Type.DIAMOND_SWORD.toString());
         itemStack.setItemMeta(meta);
         return itemStack;

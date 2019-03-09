@@ -12,6 +12,8 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -84,7 +86,8 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         Armor armor = new Armor();
         Health health = new Health();
         Weapon weapon = new Weapon();
-
+        Arrow item = player.launchProjectile(Arrow.class,player.getEyeLocation().getDirection().multiply(20));
+        item.setDamage(999d);
         world.dropItem(player.getLocation(), weapon.getSword());
         world.dropItem(player.getLocation(), health.getItem(Health.Type.HUGE));
 /*        PlayerSpawnBlock spawnBlock = new PlayerSpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),"SpawnBlock" + ++test);
@@ -125,22 +128,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        final Player p = event.getPlayer();
-            ScoreboardManager manager = Bukkit.getScoreboardManager();
-            final Scoreboard board = manager.getNewScoreboard();
-            final Objective objective = board.registerNewObjective("test", "totalKillCount");
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            objective.setDisplayName(ChatColor.RED + "YourScoreboardTitle");
-            Score score = objective.getScore("Score10");
-            score.setScore(10);
-            Score score1 = objective.getScore("Score9");
-            score1.setScore(9);
-            Score score2 = objective.getScore("Score8");
-            score2.setScore(8);
-            Score score3 = objective.getScore("§6Colors");
-            score3.setScore(7);
-            p.setScoreboard(board);
-
+        UserInterface.createScoreBoard(event.getPlayer());
     }
 
 }
