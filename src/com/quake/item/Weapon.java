@@ -43,9 +43,9 @@ public class Weapon implements Item {
             return;
         }
 
-        for (Type type : Type.values()){
-            if (itemStack.getItemMeta().getDisplayName().equals(type.toString())){
-                UserInterface.addAmmo(player,type,10);
+        for (Type type : Type.values()) {
+            if (itemStack.getItemMeta().getDisplayName().equals(type.toString())) {
+                UserInterface.addAmmo(player, type, 10);
             }
         }
     }
@@ -81,11 +81,7 @@ public class Weapon implements Item {
         if (Type.DIAMOND_SWORD == type) {
             return null;
         }
-        ItemStack itemStack = new ItemStack(Material.getMaterial(type.name()));
-        ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(type.toString());
-        itemStack.setItemMeta(meta);
-        return itemStack;
+        return Item.getItemByMaterial(type);
     }
 
 /*private final Block getTargetBlock(Player player, int range) {
