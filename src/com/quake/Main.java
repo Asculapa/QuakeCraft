@@ -12,14 +12,15 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
@@ -134,6 +135,33 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (!UserInterface.createScoreBoard(event.getPlayer())) {
             event.getPlayer().kickPlayer("Developer is fool =/");
+        }
+    }
+
+    @EventHandler
+    public void entityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
+            if (event.getDamager() instanceof Snowball) {
+                event.setDamage(3.333d);
+            } else if (event.getDamager() instanceof Arrow) {
+                event.setDamage(19d);
+            } else if (event.getDamager() instanceof Fireball) {
+                event.setDamage(10d);
+            }
+        }
+    }
+
+    @EventHandler
+    public void playerInteract(PlayerInteractEvent event) {
+        Player p = event.getPlayer();
+        Action a = event.getAction();
+        String s = event.getItem().getType().name();
+        if (a == Action.LEFT_CLICK_AIR &&
+                com.quake.item.Item.valueIsExist(Weapon.Type.values(), s)) {
+            if (UserInterface.getAmmo(p,Weapon.Type.valueOf(s)) > 0){
+                Weapon.fire(Weapon.Type.valueOf(s), p);
+                UserInterface.addAmmo(p,Weapon.Type.valueOf(s),-1);
+            }
         }
     }
 

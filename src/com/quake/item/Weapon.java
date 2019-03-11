@@ -3,9 +3,11 @@ package com.quake.item;
 import com.quake.UserInterface;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Vector;
+
 
 public class Weapon implements Item {
     public enum Type {
@@ -17,7 +19,7 @@ public class Weapon implements Item {
         }, DIAMOND_SHOVEL {
             @Override
             public String toString() {
-                return "Ray";
+                return "ShoutGun";
             }
         }, DIAMOND_HOE {
             @Override
@@ -45,7 +47,7 @@ public class Weapon implements Item {
 
         for (Type type : Type.values()) {
             if (itemStack.getItemMeta().getDisplayName().equals(type.toString())) {
-                UserInterface.addAmmo(player, type, 10);
+                UserInterface.addAmmo(player, type, 2);
             }
         }
     }
@@ -81,8 +83,28 @@ public class Weapon implements Item {
         if (Type.DIAMOND_SWORD == type) {
             return null;
         }
-        return Item.getItemByMaterial(type);
+        ItemStack itemStack = Item.getItemByMaterial(type);
+        if (itemStack == null) {
+            return null;
+        }
+        itemStack.setAmount(4);
+        return itemStack;
     }
+
+    public static void fire(Type type, Player player) {
+        switch (type) {
+            case DIAMOND_SHOVEL:
+                player.launchProjectile(Snowball.class,player.getEyeLocation().getDirection().multiply(7));
+                break;
+            case DIAMOND_HOE:
+                player.launchProjectile(Arrow.class,player.getEyeLocation().getDirection().multiply(20));
+                break;
+            case DIAMOND_PICKAXE:
+                player.launchProjectile(Fireball.class,player.getEyeLocation().getDirection());
+                break;
+        }
+    }
+
 
 /*private final Block getTargetBlock(Player player, int range) {
         BlockIterator iter = new BlockIterator(player, range);
