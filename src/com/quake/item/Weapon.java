@@ -98,7 +98,7 @@ public class Weapon implements Item {
     public static void fire(Type type, Player player) {
         switch (type) {
             case DIAMOND_SHOVEL:
-                fractionShot(Snowball.class, player.getEyeLocation().getDirection(),5, player);
+                fractionShot(Snowball.class, player.getEyeLocation().getDirection(),0.1d, player);
                 break;
             case DIAMOND_HOE:
                 player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection());
@@ -114,7 +114,7 @@ public class Weapon implements Item {
             double sin = Math.sin(a);
             double cos = Math.cos(a);
             double[][] matrix = {{cos, 0, sin}, {0, 1, 0}, {-sin, 0, cos}};
-            player.launchProjectile(projectile, vec3Multiply(matrix, player.getEyeLocation().getDirection()));
+            player.launchProjectile(projectile, vec3Multiply(matrix, player.getEyeLocation().getDirection()).multiply(3));
         }
     }
 
