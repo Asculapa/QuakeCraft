@@ -10,6 +10,10 @@ import org.bukkit.util.Vector;
 
 
 public class Weapon implements Item {
+
+    private int dropCount = 2; // TODO add config
+    private int knockbackLevel = 3;//TODO add config
+
     public enum Type {
         DIAMOND_SWORD {
             @Override
@@ -47,7 +51,7 @@ public class Weapon implements Item {
 
         for (Type type : Type.values()) {
             if (itemStack.getItemMeta().getDisplayName().equals(type.toString())) {
-                UserInterface.addAmmo(player, type, 2);
+                UserInterface.addAmmo(player, type, dropCount);
             }
         }
     }
@@ -73,7 +77,7 @@ public class Weapon implements Item {
     private ItemStack getSword() {
         ItemStack itemStack = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = itemStack.getItemMeta();
-        meta.addEnchant(Enchantment.KNOCKBACK, 3, true);
+        meta.addEnchant(Enchantment.KNOCKBACK, knockbackLevel, true);
         meta.setDisplayName(Type.DIAMOND_SWORD.toString());
         itemStack.setItemMeta(meta);
         return itemStack;
@@ -87,22 +91,81 @@ public class Weapon implements Item {
         if (itemStack == null) {
             return null;
         }
-        itemStack.setAmount(4);
+        //itemStack.setAmount(4);
         return itemStack;
     }
 
     public static void fire(Type type, Player player) {
         switch (type) {
             case DIAMOND_SHOVEL:
-                player.launchProjectile(Snowball.class,player.getEyeLocation().getDirection().multiply(7));
+                fractionShot(Snowball.class, player.getEyeLocation().getDirection(),5, player);
                 break;
             case DIAMOND_HOE:
-                player.launchProjectile(Arrow.class,player.getEyeLocation().getDirection().multiply(20));
+                player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection());
                 break;
             case DIAMOND_PICKAXE:
-                player.launchProjectile(Fireball.class,player.getEyeLocation().getDirection());
+                player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
                 break;
         }
+    }
+
+    private static void fractionShot(Class<? extends Projectile> projectile, Vector vector, double anlge, Player player) {
+        for (double a = -anlge; a <= anlge; a += anlge) {
+            double sin = Math.sin(a);
+            double cos = Math.cos(a);
+            double[][] matrix = {{cos, 0, sin}, {0, 1, 0}, {-sin, 0, cos}};
+            player.launchProjectile(projectile, vec3Multiply(matrix, player.getEyeLocation().getDirection()));
+        }
+    }
+
+    private static Vector vec3Multiply(double[][] matrix, Vector vector4) {
+        double x = matrix[0][0] * vector4.getX() + matrix[0][1] * vector4.getY() + matrix[0][2] * vector4.getZ();
+        double y = matrix[1][0] * vector4.getX() + matrix[1][1] * vector4.getY() + matrix[1][2] * vector4.getZ();
+        double z = matrix[2][0] * vector4.getX() + matrix[2][1] * vector4.getY() + matrix[2][2] * vector4.getZ();
+        return new Vector(x, y, z);
+    }
+
+    public static ItemStack getAmmo(Weapon.Type type, int count) {
+        if (count <= 0 || count > 60) {
+            count = 1;
+        }
+
+        Material material;
+        switch (type) {
+            case DIAMOND_HOE:
+                material = Material.FIRE_CHARGE;
+                break;
+            case DIAMOND_PICKAXE:
+                material = Material.ARROW;
+                break;
+            case DIAMOND_SHOVEL:
+                material = Material.SNOWBALL;
+                break;
+            default:
+                return null;
+        }
+        ItemStack itemStack = new ItemStack(material);
+        itemStack.setAmount(count);
+        return itemStack;
+    }
+
+    public static boolean setAmmo(ItemStack itemStack, Player player) {
+        Type type;
+        switch (itemStack.getType()) {
+            case FIRE_CHARGE:
+                type = Type.DIAMOND_HOE;
+                break;
+            case SNOWBALL:
+                type = Type.DIAMOND_SHOVEL;
+                break;
+            case ARROW:
+                type = Type.DIAMOND_PICKAXE;
+                break;
+            default:
+                return false;
+        }
+        UserInterface.addAmmo(player, type, itemStack.getAmount());
+        return true;
     }
 
 

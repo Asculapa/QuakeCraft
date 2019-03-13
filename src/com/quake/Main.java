@@ -22,6 +22,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
 
@@ -155,9 +156,14 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     public void playerInteract(PlayerInteractEvent event) {
         Player p = event.getPlayer();
         Action a = event.getAction();
-        String s = event.getItem().getType().name();
+        ItemStack item = event.getItem();
+        if (item == null){
+            return;
+        }
+        String s = item.getType().name();
         if (a == Action.LEFT_CLICK_AIR &&
-                com.quake.item.Item.valueIsExist(Weapon.Type.values(), s)) {
+                com.quake.item.Item.valueIsExist(Weapon.Type.values(), s)
+        && event.getItem().getItemMeta().getDisplayName().equals(Weapon.Type.valueOf(s).toString())) {
             if (UserInterface.getAmmo(p,Weapon.Type.valueOf(s)) > 0){
                 Weapon.fire(Weapon.Type.valueOf(s), p);
                 UserInterface.addAmmo(p,Weapon.Type.valueOf(s),-1);

@@ -11,6 +11,11 @@ import org.bukkit.potion.PotionType;
 
 public class Health implements Item {
 
+    private double smallHealth = 2d;
+    private double middleHealth = 5d; // TODO add config
+    private double hugeHealth = 10d;
+
+
     public enum Type {
         SMALL {
             @Override
@@ -34,13 +39,13 @@ public class Health implements Item {
     public void pickUp(Player player, ItemStack itemStack) {
         switch (Type.valueOf(itemStack.getItemMeta().getDisplayName())) {
             case SMALL:
-                player.setHealth(getHealth(player, 2d));
+                player.setHealth(getHealth(player, smallHealth));
                 break;
             case MIDDLE:
-                player.setHealth(getHealth(player, 5d));
+                player.setHealth(getHealth(player, middleHealth));
                 break;
             case HUGE:
-                player.setHealth(getHealth(player, 10d));
+                player.setHealth(getHealth(player, hugeHealth));
                 break;
         }
     }
