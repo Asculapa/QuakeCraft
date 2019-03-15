@@ -8,7 +8,7 @@ import org.bukkit.scoreboard.*;
 
 public final class UserInterface {
     private static String resources = "Resources";
-    private static String kills = "Kills";
+    private static String kills = ChatColor.RED + "Kills";
 
     public static boolean createScoreBoard(Player player) {
         try {
@@ -23,7 +23,7 @@ public final class UserInterface {
                 Score score = objective.getScore(s.toString());
                 score.setScore(0);
             }
-            Score score = objective.getScore(ChatColor.RED + "Kills");
+            Score score = objective.getScore(kills);
             score.setScore(0);
             player.setScoreboard(board);
             return true;
@@ -45,12 +45,18 @@ public final class UserInterface {
         }
     }
 
+    public static void resetScoreBoard(Player player){
+        for (Weapon.Type t: Weapon.Type.values()) {
+            player.getScoreboard().getObjective(resources).getScore(t.toString()).setScore(0);
+        }
+    }
+
     public static int getKills(Player player) {
         return player.getScoreboard().getObjective(resources).getScore(kills).getScore();
     }
 
-    public static void incrementKills(Player player) {
-        player.getScoreboard().getObjective(resources).getScore(kills).setScore(getKills(player) + 1);
+    public static void addKills(Player player, int killCount) {
+        player.getScoreboard().getObjective(resources).getScore(kills).setScore(getKills(player) + killCount);
     }
 
     public static int getAmmo(Player player, Weapon.Type weapon) {
