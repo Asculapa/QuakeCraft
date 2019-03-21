@@ -4,8 +4,13 @@ author: Shakal
 main: com.quake.Main
 api-version: 1.13
 commands:
-  new:
-    description: Craete blocks
+  newitemblock:
+    description: Craete item block
+  newjumpblock:
+    description: Craete jump block
+  newspawnblock:
+    description: Craete spawn block
+
 
 permissions:
   creator:

@@ -20,22 +20,42 @@ public interface Item {
         }
         return false;
     }
-    static boolean itemIsExist(PlayerInventory playerInventory,ItemStack itemStack){
-        for (ItemStack stack : playerInventory.getContents()){
-            if (stack != null && stack.getItemMeta().getDisplayName().equals(itemStack.getItemMeta().getDisplayName())){
+
+    static Enum getEnumByToString(Enum[] values, String string) {
+        for (Enum e : values) {
+            if (e.toString().equals(string)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    static Enum getEnumByName(Enum[] values, String string) {
+        for (Enum e : values) {
+            if (e.name().equals(string)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    static boolean itemIsExist(PlayerInventory playerInventory, ItemStack itemStack) {
+        for (ItemStack stack : playerInventory.getContents()) {
+            if (stack != null && stack.getItemMeta().getDisplayName().equals(itemStack.getItemMeta().getDisplayName())) {
                 return true;
             }
         }
         return false;
     }
-    static ItemStack getItemByMaterial(Enum type){
+
+    static ItemStack getItemByMaterial(Enum type) {
         try {
             ItemStack itemStack = new ItemStack(Material.getMaterial(type.name()));
             ItemMeta meta = itemStack.getItemMeta();
             meta.setDisplayName(type.toString());
             itemStack.setItemMeta(meta);
             return itemStack;
-        }catch (Exception e){
+        } catch (Exception e) {
             Main.log.info("I can't get item by material");
             e.printStackTrace();
             return null;

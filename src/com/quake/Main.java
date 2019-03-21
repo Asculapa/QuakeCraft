@@ -6,6 +6,7 @@ import com.quake.block.JumpBlock;
 import com.quake.block.PlayerSpawnBlock;
 import com.quake.item.Armor;
 import com.quake.item.Health;
+import com.quake.item.Item;
 import com.quake.listener.GameListener;
 import com.quake.listener.ItemListener;
 import com.quake.item.Weapon;
@@ -17,6 +18,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -79,33 +81,83 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (label.equals("new")) {
+        if (label.equals("newjumpblock")) {
             CommandController controller = new CommandController((Player) sender);
-            if (args.length >= 4) {
+            if (args.length == 3) {
+                boolean free = false;
                 switch (args[0]) {
-                    case "jumpblock":
-                        boolean free = false;
-                        switch (args[1]) {
-                            case "free":
-                                free = true;
-                                break;
-                            case "directed":
-                                break;
-                            default:
-                                controller.errorMessage("Incorrect type!");
+                    case "free":
+                        free = true;
+                        break;
+                    case "directed":
+                        break;
+                    default:
+                        controller.errorMessage("Incorrect type!");
+                        return true;
+                }
+
+                if (!isDouble(args[1])) {
+                    controller.errorMessage("Incorrect power!");
+                    return true;
+                }
+
+                if (!checkId(jumpBlocks,args[2])){
+                     controller.errorMessage("This name already exists!");
+                     return true;
+                }
+                jumpBlocks.add(controller.createJumpBlock(free,Double.valueOf(args[1]),args[2]));
+            }
+        }
+
+        return false;
+    }
+/*                        if (isDouble(args[2])) {
+                            JumpBlock j = controller.createJumpBlock(free, Double.valueOf(args[2]), args[3]);
+                            if (j.buildBehavior(this)) {
+                                jumpBlocks.add(j);
+
+                            } else {
+                                controller.errorMessage("JumpBlock has not been created");
                                 return false;
-                        }
-                        if (isDouble(args[2])) {
-                            jumpBlocks.add(controller.createJumpBlock(free, Double.valueOf(args[2]), args[3]));
+                            }
+
                         } else {
                             controller.errorMessage("Incorrect power!");
                             return false;
+                        }
+                        break;
+                    case "itemblock":
+                        if (args.length >= 5) {
+                            controller.errorMessage("Incorrect data!");
+                        }
+
+                        ItemStack itemStack;
+                        int i = 2;
+                        switch (args[1]) {
+                            case "armor":
+                                itemStack = getItemStuck(Armor.Type.values(), new Armor(), args[i]);
+                                break;
+                            case "health":
+                                itemStack = new Health().getItem(Item.getEnumByName(Health.Type.values(), args[i]));
+                                break;
+                            case "weapon":
+                                itemStack = getItemStuck(Weapon.Type.values(), new Weapon(this), args[i]);
+                                break;
+                            case "ammo":
+                                if (isInt(args[i + 1])) {
+                                    itemStack = Weapon.getAmmo((Weapon.Type) Item.getEnumByToString(Weapon.Type.values(), args[i]), Integer.valueOf(args[i + 1]));
+                                }
+                                ++i;
+                                break;
+                            default:
+                                controller.errorMessage("Incorrect type");
+                                return false;
                         }
                 }
             }
         }
         return false;
-    }
+    }*/
 
     private boolean isDouble(String string) {
         try {
@@ -114,6 +166,32 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private boolean isInt(String string) {
+        try {
+            Integer.valueOf(string);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private ItemStack getItemStuck(Enum[] values, Item item, String type) {
+        if (Item.getEnumByToString(values, type) != null) {
+            return item.getItem(Item.getEnumByToString(values, type));
+        } else {
+            return null;
+        }
+    }
+
+    private boolean checkId(ArrayList<? extends BehaviorBlock> blocks,String list){
+        for (BehaviorBlock block : blocks){
+            if (list.equals(block.getName())){
+                return false;
+            }
+        }
+        return true;
     }
 
 }

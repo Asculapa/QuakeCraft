@@ -1,8 +1,11 @@
 package com.quake;
 
+import com.quake.block.ItemSpawnBlock;
 import com.quake.block.JumpBlock;
+import com.quake.item.Item;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.block.BlockFace;
+
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -30,6 +33,10 @@ public class CommandController {
         jumpBlock = new JumpBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN), direction, power, name);
         return jumpBlock;
     }
+
+/*    public ItemSpawnBlock createItemBlock(int delay, Item item, String type, int count, String name){
+
+    }*/
 
     public void errorMessage(String message){
         player.sendMessage(ChatColor.RED + message);
