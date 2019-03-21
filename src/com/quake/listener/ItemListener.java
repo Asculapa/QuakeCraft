@@ -1,6 +1,10 @@
-package com.quake.item;
+package com.quake.listener;
 
+import com.quake.Main;
 import com.quake.UserInterface;
+import com.quake.item.Armor;
+import com.quake.item.Health;
+import com.quake.item.Weapon;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
@@ -45,7 +49,8 @@ public class ItemListener implements Listener {
                 com.quake.item.Item.valueIsExist(Weapon.Type.values(), s)
                 && event.getItem().getItemMeta().getDisplayName().equals(Weapon.Type.valueOf(s).toString())) {
             if (UserInterface.getAmmo(p, Weapon.Type.valueOf(s)) > 0) {
-                Weapon.fire(Weapon.Type.valueOf(s), p);
+                Weapon w = new Weapon(Main.main);
+                w.fire(Weapon.Type.valueOf(s), p);
                 UserInterface.addAmmo(p, Weapon.Type.valueOf(s), -1);
             }
         }
@@ -69,7 +74,7 @@ public class ItemListener implements Listener {
             health.pickUp(player, item.getItemStack());
 
         } else if (valueIsExist(Weapon.Type.values(), item.getItemStack().getType().name())) {
-            Weapon weapon = new Weapon();
+            Weapon weapon = new Weapon(Main.main);
             weapon.pickUp(player, item.getItemStack());
         }
         event.setCancelled(true);

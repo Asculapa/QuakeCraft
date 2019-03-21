@@ -77,4 +77,7 @@ public class ReadConfig extends AbstractConfig {
             return null;
         }
     }
+    public String getHelp(){
+       return configuration.getString("help");
+    }
 }

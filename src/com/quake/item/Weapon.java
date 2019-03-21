@@ -1,11 +1,15 @@
 package com.quake.item;
 
+import com.quake.Main;
 import com.quake.UserInterface;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 
@@ -13,6 +17,12 @@ public class Weapon implements Item {
 
     private int dropCount = 2; // TODO add config
     private int knockbackLevel = 3;//TODO add config
+    private Plugin plugin;
+    private int idTask;
+
+    public Weapon(Plugin plugin) {
+        this.plugin = plugin;
+    }
 
     public enum Type {
         DIAMOND_SWORD {
@@ -94,7 +104,7 @@ public class Weapon implements Item {
         return itemStack;
     }
 
-    public static void fire(Type type, Player player) {
+    public void fire(Type type, Player player) {
         switch (type) {
             case DIAMOND_SHOVEL:
                 fractionShot(Snowball.class, player.getEyeLocation().getDirection(),0.1d, player);
@@ -103,7 +113,8 @@ public class Weapon implements Item {
                 player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection());
                 break;
             case DIAMOND_PICKAXE:
-                player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
+                Projectile p = player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
+                itemParticle(p,Particle.EXPLOSION_HUGE);
                 break;
         }
     }
@@ -165,5 +176,10 @@ public class Weapon implements Item {
         }
         UserInterface.addAmmo(player, type, itemStack.getAmount());
         return true;
+    }
+    private void itemParticle(Projectile p, Particle particle){
+       idTask =  Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,()->{
+               Main.world.spawnParticle(particle,p.getLocation(),1);
+        },1,1);
     }
 }

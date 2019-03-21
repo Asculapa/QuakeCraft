@@ -4,6 +4,11 @@ author: Shakal
 main: com.quake.Main
 api-version: 1.13
 commands:
-  test:
-    description: Create spawnblock
-    usage: /test
+  new:
+    description: Craete blocks
+
+permissions:
+  creator:
+    description: Only creator can change this map
+    default: op
+
