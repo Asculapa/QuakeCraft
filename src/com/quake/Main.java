@@ -32,6 +32,8 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     public static Main main;
     private ArrayList<PlayerSpawnBlock> playerSpawnBlocks;
     private ArrayList<JumpBlock> jumpBlocks;
+    private ArrayList<ItemSpawnBlock> itemSpawnBlocks;
+
 
     @Override
     public void onEnable() {
@@ -81,8 +83,9 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        CommandController controller = new CommandController((Player) sender);
+
         if (label.equals("newjumpblock")) {
-            CommandController controller = new CommandController((Player) sender);
             if (args.length == 3) {
                 boolean free = false;
                 switch (args[0]) {
@@ -109,12 +112,54 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
             }
         }
 
+        if(label.equals("newitemblock")){
+            if (args.length >= 3){
+
+                ItemStack itemStack = null;
+
+                int i = 1;
+                switch (args[1]) {
+                    case "armor":
+                        itemStack = getItemStuck(Armor.Type.values(), new Armor(), args[i]);
+                        break;
+                    case "health":
+                        itemStack = new Health().getItem(Item.getEnumByName(Health.Type.values(), args[i]));
+                        break;
+                    case "weapon":
+                        itemStack = getItemStuck(Weapon.Type.values(), new Weapon(this), args[i]);
+                        break;
+                    case "ammo":
+                        if (isInt(args[i + 1])) {
+                            itemStack = Weapon.getAmmo((Weapon.Type) Item.getEnumByToString(Weapon.Type.values(), args[i]), Integer.valueOf(args[i + 1]));
+                        }
+                        ++i;
+                        break;
+                    default:
+                        controller.errorMessage("Incorrect type");
+                        return true;
+                }
+
+                if (!isInt(args[i + 1])){
+                    controller.errorMessage("Incorrect delay");
+                    return true;
+                }
+
+                if (!checkId(itemSpawnBlocks,args[i + 2])){
+                    controller.errorMessage("This name already exists!");
+                    return true;
+                }
+                itemSpawnBlocks.add(controller.createItemBlock(Integer.valueOf(args[i + 1]),itemStack,args[i + 2]));
+            }
+        }
+
         return false;
     }
 /*                        if (isDouble(args[2])) {
                             JumpBlock j = controller.createJumpBlock(free, Double.valueOf(args[2]), args[3]);
                             if (j.buildBehavior(this)) {
                                 jumpBlocks.add(j);
+
+/new itemblock ammo blaster 10 47 spawnblock1
 
                             } else {
                                 controller.errorMessage("JumpBlock has not been created");

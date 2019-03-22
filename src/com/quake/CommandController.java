@@ -4,9 +4,11 @@ import com.quake.block.ItemSpawnBlock;
 import com.quake.block.JumpBlock;
 import com.quake.item.Item;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class CommandController {
@@ -34,9 +36,13 @@ public class CommandController {
         return jumpBlock;
     }
 
-/*    public ItemSpawnBlock createItemBlock(int delay, Item item, String type, int count, String name){
+    public ItemSpawnBlock createItemBlock(int delay, ItemStack itemStack, String name){
+        if (itemStack == null){
+            return null;
+        }
+        return new ItemSpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),delay,itemStack,name);
 
-    }*/
+    }
 
     public void errorMessage(String message){
         player.sendMessage(ChatColor.RED + message);
