@@ -11,7 +11,7 @@ import com.quake.listener.GameListener;
 import com.quake.listener.ItemListener;
 import com.quake.item.Weapon;
 import com.quake.сonfig.ReadConfig;
-import net.minecraft.server.v1_13_R2.ChatComponentText;
+import com.quake.сonfig.WriteConfig;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,6 +45,8 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         ReadConfig readConfig = new ReadConfig(this);
         playerSpawnBlocks = readConfig.getPlayerSpawnBlocks();
         readConfig.getBehaviorBlocks(JumpBlock.class);
+        jumpBlocks = new ArrayList<>();
+        itemSpawnBlocks = new ArrayList<>();
         main = this;
         //==============================================================================
         for (BehaviorBlock s : readConfig.getBehaviorBlocks(JumpBlock.class)) {
@@ -84,6 +86,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         CommandController controller = new CommandController((Player) sender);
+        WriteConfig writeConfig = new WriteConfig(this);
 
         if (label.equals("newjumpblock")) {
             if (args.length == 3) {
@@ -104,21 +107,24 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                     return true;
                 }
 
-                if (!checkId(jumpBlocks,args[2])){
-                     controller.errorMessage("This name already exists!");
-                     return true;
+                if (!checkBehaviorId(jumpBlocks, args[2])) {
+                    controller.errorMessage("This name already exists!");
+                    return true;
                 }
-                jumpBlocks.add(controller.createJumpBlock(free,Double.valueOf(args[1]),args[2]));
+                JumpBlock jumpBlock = controller.createJumpBlock(free, Double.valueOf(args[1]), args[2]);
+                jumpBlock.buildBehavior(this);
+                jumpBlocks.add(jumpBlock);
+                writeConfig.addBehaviorBlock(jumpBlock);
             }
         }
 
-        if(label.equals("newitemblock")){
-            if (args.length >= 3){
+        if (label.equals("newitemblock")) {
+            if (args.length >= 3) {
 
                 ItemStack itemStack = null;
 
                 int i = 1;
-                switch (args[1]) {
+                switch (args[0]) {
                     case "armor":
                         itemStack = getItemStuck(Armor.Type.values(), new Armor(), args[i]);
                         break;
@@ -139,19 +145,39 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                         return true;
                 }
 
-                if (!isInt(args[i + 1])){
+                if (itemStack == null) {
+                    controller.errorMessage("Incorrect item");
+                    return true;
+                }
+
+                if (!isInt(args[i + 1])) {
                     controller.errorMessage("Incorrect delay");
                     return true;
                 }
 
-                if (!checkId(itemSpawnBlocks,args[i + 2])){
+                if (!checkBehaviorId(itemSpawnBlocks, args[i + 2])) {
                     controller.errorMessage("This name already exists!");
                     return true;
                 }
-                itemSpawnBlocks.add(controller.createItemBlock(Integer.valueOf(args[i + 1]),itemStack,args[i + 2]));
+
+                ItemSpawnBlock spawnBlock = controller.createItemBlock(Integer.valueOf(args[i + 1]), itemStack, args[i + 2]);
+                spawnBlock.buildBehavior(this);
+                itemSpawnBlocks.add(spawnBlock);
+                writeConfig.addBehaviorBlock(spawnBlock);
             }
         }
 
+        if (label.equals("newspawnblock")) {
+            if (args.length == 1 && checkSpawnBlockId(playerSpawnBlocks, args[0])) {
+                PlayerSpawnBlock playerSpawnBlock = controller.createSpawnBlock(args[0]);
+                writeConfig.addPlayerSpawnBlock(playerSpawnBlock);
+                playerSpawnBlocks.add(playerSpawnBlock);
+                controller.successMessage(playerSpawnBlock.getName());
+            } else {
+                controller.errorMessage("Incorrect name");
+                return true;
+            }
+        }
         return false;
     }
 /*                        if (isDouble(args[2])) {
@@ -230,9 +256,18 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         }
     }
 
-    private boolean checkId(ArrayList<? extends BehaviorBlock> blocks,String list){
-        for (BehaviorBlock block : blocks){
-            if (list.equals(block.getName())){
+    private boolean checkBehaviorId(ArrayList<? extends BehaviorBlock> blocks, String list) {
+        for (BehaviorBlock block : blocks) {
+            if (list.equals(block.getName())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkSpawnBlockId(ArrayList<PlayerSpawnBlock> blocks, String list) {
+        for (PlayerSpawnBlock block : blocks) {
+            if (list.equals(block.getName())) {
                 return false;
             }
         }

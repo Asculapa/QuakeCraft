@@ -2,9 +2,8 @@ package com.quake;
 
 import com.quake.block.ItemSpawnBlock;
 import com.quake.block.JumpBlock;
-import com.quake.item.Item;
+import com.quake.block.PlayerSpawnBlock;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import org.bukkit.entity.Player;
@@ -44,7 +43,15 @@ public class CommandController {
 
     }
 
+    public PlayerSpawnBlock createSpawnBlock(String name){
+        return new PlayerSpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN),name);
+    }
+
     public void errorMessage(String message){
         player.sendMessage(ChatColor.RED + message);
+    }
+
+    public void successMessage(String name){
+        player.sendMessage(ChatColor.BLUE + name + ChatColor.GREEN + " was created successfully.");
     }
 }
