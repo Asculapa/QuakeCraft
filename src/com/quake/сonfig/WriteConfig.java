@@ -5,7 +5,6 @@ import com.quake.block.BehaviorBlock;
 import com.quake.block.PlayerSpawnBlock;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 
 public class WriteConfig extends AbstractConfig {
 
@@ -81,6 +80,21 @@ public class WriteConfig extends AbstractConfig {
             return true;
         } catch (Exception e) {
             Main.log.info("I can't write " + PlayerSpawnBlock.class.getSimpleName() + " - " + block.getName());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean removeBlock(com.quake.block.Block block) {
+        try {
+            ConfigurationSection section = configuration.getConfigurationSection(block.getBlockClass() + "s");
+            if (section == null || !section.isSet(block.getName())) {
+                return false;
+            }
+            section.set(block.getName(), null);
+            return true;
+        } catch (Exception e) {
+            Main.log.info("I can't remove " + block.getName());
             e.printStackTrace();
             return false;
         }

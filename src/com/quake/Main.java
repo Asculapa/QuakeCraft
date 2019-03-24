@@ -37,6 +37,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
     @Override
     public void onEnable() {
+
         this.getLogger().info("Quake!");
         world = this.getServer().getWorld("world");
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
@@ -180,55 +181,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         }
         return false;
     }
-/*                        if (isDouble(args[2])) {
-                            JumpBlock j = controller.createJumpBlock(free, Double.valueOf(args[2]), args[3]);
-                            if (j.buildBehavior(this)) {
-                                jumpBlocks.add(j);
 
-/new itemblock ammo blaster 10 47 spawnblock1
-
-                            } else {
-                                controller.errorMessage("JumpBlock has not been created");
-                                return false;
-                            }
-
-                        } else {
-                            controller.errorMessage("Incorrect power!");
-                            return false;
-                        }
-                        break;
-                    case "itemblock":
-                        if (args.length >= 5) {
-                            controller.errorMessage("Incorrect data!");
-                        }
-
-                        ItemStack itemStack;
-                        int i = 2;
-                        switch (args[1]) {
-                            case "armor":
-                                itemStack = getItemStuck(Armor.Type.values(), new Armor(), args[i]);
-                                break;
-                            case "health":
-                                itemStack = new Health().getItem(Item.getEnumByName(Health.Type.values(), args[i]));
-                                break;
-                            case "weapon":
-                                itemStack = getItemStuck(Weapon.Type.values(), new Weapon(this), args[i]);
-                                break;
-                            case "ammo":
-                                if (isInt(args[i + 1])) {
-                                    itemStack = Weapon.getAmmo((Weapon.Type) Item.getEnumByToString(Weapon.Type.values(), args[i]), Integer.valueOf(args[i + 1]));
-                                }
-                                ++i;
-                                break;
-                            default:
-                                controller.errorMessage("Incorrect type");
-                                return false;
-                        }
-                }
-            }
-        }
-        return false;
-    }*/
 
     private boolean isDouble(String string) {
         try {
