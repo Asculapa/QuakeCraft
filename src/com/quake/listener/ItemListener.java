@@ -34,6 +34,10 @@ public class ItemListener implements Listener {
                 event.setDamage(10d);
             }
         }
+
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL){
+            event.setDamage(0.5d);
+        }
     }
 
     @EventHandler

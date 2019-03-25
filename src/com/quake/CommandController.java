@@ -1,9 +1,6 @@
 package com.quake;
 
-import com.quake.block.Block;
-import com.quake.block.ItemSpawnBlock;
-import com.quake.block.JumpBlock;
-import com.quake.block.PlayerSpawnBlock;
+import com.quake.block.*;
 import com.quake.сonfig.WriteConfig;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.block.BlockFace;
@@ -52,6 +49,11 @@ public class CommandController {
         for (Block block : list) {
             if (block.getName().equals(name)) {
                 if (config.removeBlock(block)){
+                    if (block instanceof BehaviorBlock){
+                       if (!((BehaviorBlock)block).removeBehavior()){
+                           return false;
+                       }
+                    }
                     list.remove(block);
                     return true;
                 }
@@ -74,6 +76,7 @@ public class CommandController {
 
         int count = list.size() / listLength; //9 -> 10
         if (count < page) {
+            errorMessage("Incorrect index!");
             return;
         }
         printList(list, page * listLength, (page * listLength) + listLength);
@@ -97,7 +100,7 @@ public class CommandController {
         }
 
         player.sendMessage(ChatColor.DARK_GREEN + "Blocks:");
-        for (int a = start; a < end; a++) {
+        for (int a = start; a <= end; a++) {
             Block block = list.get(a);
             Location loc = block.getBlock().getLocation();
             player.sendMessage( ChatColor.BLUE + block.getName() + ":" + ChatColor.YELLOW + " X = " + loc.getX() + "; Y = " + loc.getY() + "; Z = " + loc.getZ() + ";");

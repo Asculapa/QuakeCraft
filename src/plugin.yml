@@ -19,4 +19,3 @@ permissions:
   creator:
     description: Only creator can change this map
     default: op
-

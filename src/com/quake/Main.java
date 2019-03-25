@@ -82,11 +82,11 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        CommandController controller = new CommandController((Player) sender);
+        Player p = (Player) sender;
+        CommandController controller = new CommandController(p);
         WriteConfig writeConfig = new WriteConfig(this);
 
-        if (label.equals("newjumpblock")) {
+        if (label.equals("newjumpblock") && p.hasPermission("creator")) {
             if (args.length == 3) {
                 boolean free = false;
                 switch (args[0]) {
@@ -117,7 +117,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
             }
         }
 
-        if (label.equals("newitemblock")) {
+        if (label.equals("newitemblock") && p.hasPermission("creator")) {
             if (args.length >= 3) {
 
                 ItemStack itemStack = null;
@@ -167,7 +167,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
             }
         }
 
-        if (label.equals("newspawnblock")) {
+        if (label.equals("newspawnblock") && p.hasPermission("creator")) {
             if (args.length == 1 && !checkBlockId(playerSpawnBlocks, args[0])) {
                 PlayerSpawnBlock playerSpawnBlock = controller.createSpawnBlock(args[0]);
                 writeConfig.addPlayerSpawnBlock(playerSpawnBlock);
@@ -179,7 +179,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
             }
         }
 
-        if (label.equals("show")) {
+        if (label.equals("show") && p.hasPermission("creator")) {
             if (args.length >= 1) {
                 int page = 0;
 
@@ -213,7 +213,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
             }
         }
 
-        if (label.equals("remove")) {
+        if (label.equals("remove") && p.hasPermission("creator")) {
             if (args.length == 2) {
                 ArrayList<? extends Block> blocks;
                 switch (args[0]) {
@@ -227,12 +227,12 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                         blocks = playerSpawnBlocks;
                         break;
                     default:
-                            controller.errorMessage("Incorrect type!");
-                            return true;
+                        controller.errorMessage("Incorrect type!");
+                        return true;
                 }
-                if (controller.removeBlock(blocks,writeConfig,args[1])){
+                if (controller.removeBlock(blocks, writeConfig, args[1])) {
                     controller.successRemovedBlock(args[1]);
-                }else {
+                } else {
                     controller.errorMessage("You can't hahahah! Why? Idk :(");
                     return true;
                 }
