@@ -1,9 +1,6 @@
 package com.quake;
 
-import com.quake.block.BehaviorBlock;
-import com.quake.block.ItemSpawnBlock;
-import com.quake.block.JumpBlock;
-import com.quake.block.PlayerSpawnBlock;
+import com.quake.block.*;
 import com.quake.item.Armor;
 import com.quake.item.Health;
 import com.quake.item.Item;
@@ -116,6 +113,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                 jumpBlock.buildBehavior(this);
                 jumpBlocks.add(jumpBlock);
                 writeConfig.addBehaviorBlock(jumpBlock);
+                controller.successCreatedBlock(jumpBlock.getName());
             }
         }
 
@@ -165,6 +163,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                 spawnBlock.buildBehavior(this);
                 itemSpawnBlocks.add(spawnBlock);
                 writeConfig.addBehaviorBlock(spawnBlock);
+                controller.successCreatedBlock(spawnBlock.getName());
             }
         }
 
@@ -214,6 +213,34 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
             }
         }
 
+        if (label.equals("remove")) {
+            if (args.length == 2) {
+                ArrayList<? extends Block> blocks;
+                switch (args[0]) {
+                    case "itemblock":
+                        blocks = itemSpawnBlocks;
+                        break;
+                    case "jumpblock":
+                        blocks = jumpBlocks;
+                        break;
+                    case "spawnblock":
+                        blocks = playerSpawnBlocks;
+                        break;
+                    default:
+                            controller.errorMessage("Incorrect type!");
+                            return true;
+                }
+                if (controller.removeBlock(blocks,writeConfig,args[1])){
+                    controller.successRemovedBlock(args[1]);
+                }else {
+                    controller.errorMessage("You can't hahahah! Why? Idk :(");
+                    return true;
+                }
+            } else {
+                controller.errorMessage("Incorrect data!");
+                return true;
+            }
+        }
         return false;
     }
 

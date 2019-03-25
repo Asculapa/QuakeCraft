@@ -4,6 +4,7 @@ import com.quake.block.Block;
 import com.quake.block.ItemSpawnBlock;
 import com.quake.block.JumpBlock;
 import com.quake.block.PlayerSpawnBlock;
+import com.quake.сonfig.WriteConfig;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.block.BlockFace;
 
@@ -47,6 +48,19 @@ public class CommandController {
 
     }
 
+    public boolean removeBlock(ArrayList<? extends Block> list, WriteConfig config, String name) {
+        for (Block block : list) {
+            if (block.getName().equals(name)) {
+                if (config.removeBlock(block)){
+                    list.remove(block);
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
     public PlayerSpawnBlock createSpawnBlock(String name) {
         return new PlayerSpawnBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN), name);
     }
@@ -64,7 +78,7 @@ public class CommandController {
         }
         printList(list, page * listLength, (page * listLength) + listLength);
         player.sendMessage("Total number of blocks: " + list.size());
-        player.sendMessage("Page" + page + "/"  + list.size()/listLength);
+        player.sendMessage("Page " + page + "/" + list.size() / listLength);
         return;
     }
 
@@ -86,7 +100,7 @@ public class CommandController {
         for (int a = start; a < end; a++) {
             Block block = list.get(a);
             Location loc = block.getBlock().getLocation();
-            player.sendMessage(ChatColor.YELLOW + block.getName() + ":" + ChatColor.BLUE + " X = " + loc.getX() + "; Y = " + loc.getY() + "; Z = " + loc.getZ() + ";");
+            player.sendMessage( ChatColor.BLUE + block.getName() + ":" + ChatColor.YELLOW + " X = " + loc.getX() + "; Y = " + loc.getY() + "; Z = " + loc.getZ() + ";");
         }
     }
 
@@ -96,5 +110,8 @@ public class CommandController {
 
     public void successCreatedBlock(String block) {
         player.sendMessage(ChatColor.BLUE + block + ChatColor.GREEN + " was created successfully.");
+    }
+    public void successRemovedBlock(String block) {
+        player.sendMessage(ChatColor.BLUE + block + ChatColor.AQUA + " was removed successfully.");
     }
 }
