@@ -10,7 +10,7 @@ commands:
     description: Craete jump block
   newspawnblock:
     description: Craete spawn block
-  blocks:
+  show:
     description: show all blocks
 
 permissions:

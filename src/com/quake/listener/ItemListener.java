@@ -77,6 +77,8 @@ public class ItemListener implements Listener {
             Weapon weapon = new Weapon(Main.main);
             weapon.pickUp(player, item.getItemStack());
         }
+
+        Weapon.setAmmo(item.getItemStack(),player);
         event.setCancelled(true);
         item.remove();
     }

@@ -147,12 +147,12 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                 }
 
                 if (itemStack == null) {
-                    controller.errorMessage("Incorrect item");
+                    controller.errorMessage("Incorrect item!");
                     return true;
                 }
 
                 if (!isInt(args[i + 1])) {
-                    controller.errorMessage("Incorrect delay");
+                    controller.errorMessage("Incorrect delay!");
                     return true;
                 }
 
@@ -173,12 +173,47 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                 PlayerSpawnBlock playerSpawnBlock = controller.createSpawnBlock(args[0]);
                 writeConfig.addPlayerSpawnBlock(playerSpawnBlock);
                 playerSpawnBlocks.add(playerSpawnBlock);
-                controller.successMessage(playerSpawnBlock.getName());
+                controller.successCreatedBlock(playerSpawnBlock.getName());
             } else {
-                controller.errorMessage("Incorrect name");
+                controller.errorMessage("Incorrect name!");
                 return true;
             }
         }
+
+        if (label.equals("show")) {
+            if (args.length >= 1) {
+                int page = 0;
+
+                if (args.length == 2) {
+                    if (isInt(args[1])) {
+                        page = Integer.valueOf(args[1]);
+                    } else {
+                        controller.errorMessage("Incorrect index!");
+                        return true;
+                    }
+                }
+
+                switch (args[0]) {
+                    case "itemblocks":
+                        controller.chatList(itemSpawnBlocks, page);
+                        break;
+                    case "jumpblocks":
+                        controller.chatList(jumpBlocks, page);
+                        break;
+                    case "spawnblocks":
+                        controller.chatList(playerSpawnBlocks, page);
+                        break;
+                    default:
+                        controller.errorMessage("Incorrect type!");
+                        return true;
+                }
+
+            } else {
+                controller.errorMessage("Incorrect data!");
+                return true;
+            }
+        }
+
         return false;
     }
 
