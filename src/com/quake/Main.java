@@ -105,7 +105,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                     return true;
                 }
 
-                if (!checkBehaviorId(jumpBlocks, args[2])) {
+                if (checkBlockId(jumpBlocks, args[2])) {
                     controller.errorMessage("This name already exists!");
                     return true;
                 }
@@ -140,7 +140,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                         ++i;
                         break;
                     default:
-                        controller.errorMessage("Incorrect type");
+                        controller.errorMessage("Incorrect type!");
                         return true;
                 }
 
@@ -154,7 +154,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                     return true;
                 }
 
-                if (!checkBehaviorId(itemSpawnBlocks, args[i + 2])) {
+                if (checkBlockId(itemSpawnBlocks, args[i + 2])) {
                     controller.errorMessage("This name already exists!");
                     return true;
                 }
@@ -168,7 +168,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         }
 
         if (label.equals("newspawnblock")) {
-            if (args.length == 1 && checkSpawnBlockId(playerSpawnBlocks, args[0])) {
+            if (args.length == 1 && !checkBlockId(playerSpawnBlocks, args[0])) {
                 PlayerSpawnBlock playerSpawnBlock = controller.createSpawnBlock(args[0]);
                 writeConfig.addPlayerSpawnBlock(playerSpawnBlock);
                 playerSpawnBlocks.add(playerSpawnBlock);
@@ -271,22 +271,14 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         }
     }
 
-    private boolean checkBehaviorId(ArrayList<? extends BehaviorBlock> blocks, String list) {
-        for (BehaviorBlock block : blocks) {
-            if (list.equals(block.getName())) {
-                return false;
-            }
-        }
-        return true;
-    }
 
-    private boolean checkSpawnBlockId(ArrayList<PlayerSpawnBlock> blocks, String list) {
-        for (PlayerSpawnBlock block : blocks) {
+    private boolean checkBlockId(ArrayList<? extends Block> blocks, String list) {
+        for (Block block : blocks) {
             if (list.equals(block.getName())) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
 }
