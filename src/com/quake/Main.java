@@ -37,47 +37,28 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
         this.getLogger().info("Quake!");
         world = this.getServer().getWorld("world");
+        main = this;
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GameListener(), this);
         ReadConfig readConfig = new ReadConfig(this);
         playerSpawnBlocks = readConfig.getPlayerSpawnBlocks();
-        readConfig.getBehaviorBlocks(JumpBlock.class);
         jumpBlocks = new ArrayList<>();
         itemSpawnBlocks = new ArrayList<>();
-        main = this;
-        //==============================================================================
         for (BehaviorBlock s : readConfig.getBehaviorBlocks(JumpBlock.class)) {
             s.buildBehavior(this);
-            log.info(s.getName() + "/n" + s.getBlock().toString());
+            jumpBlocks.add((JumpBlock) s);
         }
         for (BehaviorBlock s : readConfig.getBehaviorBlocks(ItemSpawnBlock.class)) {
             s.buildBehavior(this);
-            log.info(s.getName() + "/n" + s.getBlock().toString());
+            itemSpawnBlocks.add((ItemSpawnBlock) s);
         }
-       /* for (ItemSpawnBlock block : config.getSpawnBlocks()){
 
-            log.info("Name - " + block.getName());
-
-            log.info("X - " + block.getBlock().getX());
-            log.info("Y - " + block.getBlock().getY());
-            log.info("Z - " + block.getBlock().getZ());
-            block.buildBehavior(this);
-        }*/
     }
 
     @Override
     public void onDisable() {
 
-    }
-
-    public void sendMultilineMessage(Player player, String message) {
-        if (player != null && message != null && player.isOnline()) {
-            String[] s = message.split("\n");
-            for (String m : s) {
-                player.sendMessage(m);
-            }
-        }
     }
 
     @Override
