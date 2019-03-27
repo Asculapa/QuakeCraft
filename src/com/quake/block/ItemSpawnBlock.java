@@ -102,17 +102,14 @@ public class ItemSpawnBlock implements BehaviorBlock {
 
     @Override
     public boolean removeBehavior() {
-        if (scheduler.isCurrentlyRunning(taskID)) {
             try {
                 scheduler.cancelTask(taskID);
                 return true;
             } catch (Exception e) {
-                Main.log.info("BlockSpawn " + name + "not removed");
+                Main.log.info("ItemSpawnBlock " + name + " not removed");
                 e.printStackTrace();
                 return false;
             }
-        }
-        return false;
     }
 
     private boolean itemAbsent() {

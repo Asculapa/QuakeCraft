@@ -26,7 +26,6 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
     public static final Logger log = Logger.getLogger("Minecraft");
     public static World world;
-    public static Main main;
     private ArrayList<PlayerSpawnBlock> playerSpawnBlocks;
     private ArrayList<JumpBlock> jumpBlocks;
     private ArrayList<ItemSpawnBlock> itemSpawnBlocks;
@@ -37,7 +36,6 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
         this.getLogger().info("Quake!");
         world = this.getServer().getWorld("world");
-        main = this;
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GameListener(), this);
@@ -46,11 +44,15 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         jumpBlocks = new ArrayList<>();
         itemSpawnBlocks = new ArrayList<>();
         for (BehaviorBlock s : readConfig.getBehaviorBlocks(JumpBlock.class)) {
-            s.buildBehavior(this);
+            if (!s.buildBehavior(this)){
+                log.info(s.getName() + " not loaded!");
+            }
             jumpBlocks.add((JumpBlock) s);
         }
         for (BehaviorBlock s : readConfig.getBehaviorBlocks(ItemSpawnBlock.class)) {
-            s.buildBehavior(this);
+            if (!s.buildBehavior(this)){
+                log.info(s.getName() + " not loaded!");
+            }
             itemSpawnBlocks.add((ItemSpawnBlock) s);
         }
 
@@ -112,7 +114,7 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
                         itemStack = new Health().getItem(Item.getEnumByName(Health.Type.values(), args[i]));
                         break;
                     case "weapon":
-                        itemStack = getItemStuck(Weapon.Type.values(), new Weapon(this), args[i]);
+                        itemStack = getItemStuck(Weapon.Type.values(), new Weapon(), args[i]);
                         break;
                     case "ammo":
                         if (isInt(args[i + 1])) {

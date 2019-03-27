@@ -1,5 +1,6 @@
 package com.quake.listener;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.quake.Main;
 import com.quake.UserInterface;
 import com.quake.item.Armor;
@@ -19,9 +20,14 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static com.quake.item.Item.valueIsExist;
 
 public class ItemListener implements Listener {
+    ArrayList<Player> players = new ArrayList<>();
 
     @EventHandler
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
@@ -35,25 +41,48 @@ public class ItemListener implements Listener {
             }
         }
 
-        if (event.getCause() == EntityDamageEvent.DamageCause.FALL){
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             event.setDamage(0.5d);
         }
+    }
+
+    private synchronized void delPlayer(Player player) {
+        players.remove(player);
+    }
+
+    private synchronized void addPlayer(Player player) {
+        players.add(player);
     }
 
     @EventHandler
     public void playerInteract(PlayerInteractEvent event) {
         Player p = event.getPlayer();
         Action a = event.getAction();
+
+        if (players.contains(p)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        addPlayer(p);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                delPlayer(p);
+            }
+        }, 1000); // TODO add config
+
         ItemStack item = event.getItem();
         if (item == null) {
             return;
         }
         String s = item.getType().name();
-        if (a == Action.LEFT_CLICK_AIR &&
+        if ((a == Action.LEFT_CLICK_BLOCK || a == Action.LEFT_CLICK_AIR) &&
                 com.quake.item.Item.valueIsExist(Weapon.Type.values(), s)
                 && event.getItem().getItemMeta().getDisplayName().equals(Weapon.Type.valueOf(s).toString())) {
             if (UserInterface.getAmmo(p, Weapon.Type.valueOf(s)) > 0) {
-                Weapon w = new Weapon(Main.main);
+                Weapon w = new Weapon();
                 w.fire(Weapon.Type.valueOf(s), p);
                 UserInterface.addAmmo(p, Weapon.Type.valueOf(s), -1);
             }
@@ -78,11 +107,11 @@ public class ItemListener implements Listener {
             health.pickUp(player, item.getItemStack());
 
         } else if (valueIsExist(Weapon.Type.values(), item.getItemStack().getType().name())) {
-            Weapon weapon = new Weapon(Main.main);
+            Weapon weapon = new Weapon();
             weapon.pickUp(player, item.getItemStack());
         }
 
-        Weapon.setAmmo(item.getItemStack(),player);
+        Weapon.setAmmo(item.getItemStack(), player);
         event.setCancelled(true);
         item.remove();
     }

@@ -2,27 +2,23 @@ package com.quake.item;
 
 import com.quake.Main;
 import com.quake.UserInterface;
-import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
+import org.bukkit.Location;
 
 
 public class Weapon implements Item {
 
     private int dropCount = 2; // TODO add config
     private int knockbackLevel = 3;//TODO add config
-    private Plugin plugin;
-    private int idTask;
-
-    public Weapon(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     public enum Type {
         DIAMOND_SWORD {
@@ -107,19 +103,48 @@ public class Weapon implements Item {
     public void fire(Type type, Player player) {
         switch (type) {
             case DIAMOND_SHOVEL:
-                fractionShot(Snowball.class, player.getEyeLocation().getDirection(),0.1d, player);
+                fractionShot(Snowball.class,0.1d, player);
                 break;
             case DIAMOND_HOE:
                 player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection());
                 break;
             case DIAMOND_PICKAXE:
                 Projectile p = player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
-                itemParticle(p,Particle.EXPLOSION_HUGE);
+                Location loc1 = p.getLocation();
+                Location loc2 = getTargetBlock(player,40).getLocation();
+                Vector vector = getDirectionBetweenLocations(loc1,loc2);
+
+                for (double i = 1; i <= loc1.distance(loc2); i += 0.5) {
+                    vector.multiply(i);
+                    loc1.add(vector);
+                    loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK,loc1,1);
+                    loc1.subtract(vector);
+                    vector.normalize();
+                }
                 break;
         }
     }
 
-    private static void fractionShot(Class<? extends Projectile> projectile, Vector vector, double anlge, Player player) {
+    private Block getTargetBlock(Player player, int range) {
+        BlockIterator iter = new BlockIterator(player, range);
+        Block lastBlock = iter.next();
+        while (iter.hasNext()) {
+            lastBlock = iter.next();
+            if (lastBlock.getType() == Material.AIR) {
+                continue;
+            }
+            break;
+        }
+        return lastBlock;
+    }
+
+    private Vector getDirectionBetweenLocations(Location Start, Location End) {
+        Vector from = Start.toVector();
+        Vector to = End.toVector();
+        return to.subtract(from);
+    }
+
+    private static void fractionShot(Class<? extends Projectile> projectile, double anlge, Player player) {
         for (double a = -anlge; a <= anlge; a += anlge) {
             double sin = Math.sin(a);
             double cos = Math.cos(a);
@@ -176,10 +201,5 @@ public class Weapon implements Item {
         }
         UserInterface.addAmmo(player, type, itemStack.getAmount());
         return true;
-    }
-    private void itemParticle(Projectile p, Particle particle){
-       idTask =  Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin,()->{
-               Main.world.spawnParticle(particle,p.getLocation(),1);
-        },1,1);
     }
 }
