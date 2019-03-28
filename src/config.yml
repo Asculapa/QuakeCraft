@@ -1,2 +1,12 @@
 help: "- new jumpblock <free - , specified - >\n
        - new itemspanwblock <health -, >"
+dropCount: 2
+swordPower: 3
+smallHealth: 2d
+middleHealth: 5d
+hugeHealth: 10d
+attackDelay: 1000
+swordName: "Excalibur"
+shovelName: "ShoutGun"
+hoeName: "Bazooka"
+pickaxeName: "Blaster"

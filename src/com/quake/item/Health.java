@@ -1,6 +1,6 @@
 package com.quake.item;
 
-import com.quake.Main;
+import com.quake.сonfig.ReadConfig;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -11,10 +11,15 @@ import org.bukkit.potion.PotionType;
 
 public class Health implements Item {
 
-    private double smallHealth = 2d;
-    private double middleHealth = 5d; // TODO add config
-    private double hugeHealth = 10d;
+    private static double smallHealth;
+    private static double middleHealth;
+    private static double hugeHealth;
 
+    public static void biuld(ReadConfig readConfig) {
+        smallHealth = readConfig.getDoubleValue("smallHealth");
+        middleHealth = readConfig.getDoubleValue("middleHealth");
+        hugeHealth = readConfig.getDoubleValue("hugeHealth");
+    }
 
     public enum Type {
         SMALL {

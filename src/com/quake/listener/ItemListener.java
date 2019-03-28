@@ -1,11 +1,10 @@
 package com.quake.listener;
 
-import com.mysql.fabric.xmlrpc.base.Array;
-import com.quake.Main;
 import com.quake.UserInterface;
 import com.quake.item.Armor;
 import com.quake.item.Health;
 import com.quake.item.Weapon;
+import com.quake.сonfig.ReadConfig;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
@@ -27,7 +26,12 @@ import java.util.TimerTask;
 import static com.quake.item.Item.valueIsExist;
 
 public class ItemListener implements Listener {
-    ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<Player> players = new ArrayList<>();
+    private static int delay;
+
+    public ItemListener(ReadConfig readConfig) {
+        delay = readConfig.getIntValue("attackDelay");
+    }
 
     @EventHandler
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
@@ -71,7 +75,7 @@ public class ItemListener implements Listener {
             public void run() {
                 delPlayer(p);
             }
-        }, 1000); // TODO add config
+        }, delay);
 
         ItemStack item = event.getItem();
         if (item == null) {
@@ -113,6 +117,7 @@ public class ItemListener implements Listener {
 
         Weapon.setAmmo(item.getItemStack(), player);
         event.setCancelled(true);
+        item.getItemStack().setAmount(0);
         item.remove();
     }
 

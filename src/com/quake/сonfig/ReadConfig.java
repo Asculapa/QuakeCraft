@@ -77,7 +77,16 @@ public class ReadConfig extends AbstractConfig {
             return null;
         }
     }
-    public String getHelp(){
-       return configuration.getString("help");
+
+    public String getStringValue(String key) {
+        return configuration.getString(key);
+    }
+
+    public Integer getIntValue(String key) {
+        return configuration.getInt(key);
+    }
+
+    public Double getDoubleValue(String key) {
+        return configuration.getDouble(key);
     }
 }

@@ -1,7 +1,6 @@
 package com.quake.listener;
 
 import com.quake.UserInterface;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

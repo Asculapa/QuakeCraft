@@ -36,10 +36,12 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
 
         this.getLogger().info("Quake!");
         world = this.getServer().getWorld("world");
-        Bukkit.getServer().getPluginManager().registerEvents(this, this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new GameListener(), this);
         ReadConfig readConfig = new ReadConfig(this);
+        Weapon.biuld(readConfig);
+        Health.biuld(readConfig);
+        Bukkit.getServer().getPluginManager().registerEvents(this, this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(readConfig), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new GameListener(), this);
         playerSpawnBlocks = readConfig.getPlayerSpawnBlocks();
         jumpBlocks = new ArrayList<>();
         itemSpawnBlocks = new ArrayList<>();

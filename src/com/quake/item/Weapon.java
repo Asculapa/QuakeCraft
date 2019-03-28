@@ -1,8 +1,7 @@
 package com.quake.item;
 
-import com.quake.Main;
 import com.quake.UserInterface;
-import org.bukkit.Effect;
+import com.quake.сonfig.ReadConfig;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -17,36 +16,65 @@ import org.bukkit.Location;
 
 public class Weapon implements Item {
 
-    private int dropCount = 2; // TODO add config
-    private int knockbackLevel = 3;//TODO add config
+    private static int dropCount;
+    private static int knockbackLevel;
+    private static String sword;
+    private static String shovel;
+    private static String hoe;
+    private static String pickaxe;
+
+    public static void biuld(ReadConfig config) {
+
+        dropCount = config.getIntValue("dropCount");
+        knockbackLevel = config.getIntValue("swordPower");
+        sword = config.getStringValue("swordName");
+        shovel = config.getStringValue("shovelName");
+        hoe = config.getStringValue("hoeName");
+        pickaxe = config.getStringValue("pickaxeName");
+
+        if (sword.equals("")) {
+            sword = "Sword";
+        }
+
+        if (shovel.equals("")) {
+            shovel = "Shovel";
+        }
+
+        if (hoe.equals("")) {
+            hoe = "Hoe";
+        }
+
+        if (pickaxe.equals("")) {
+            pickaxe = "Pickaxe";
+        }
+    }
 
     public enum Type {
         DIAMOND_SWORD {
             @Override
             public String toString() {
-                return "Excalibur";
+                return sword;
             }
         }, DIAMOND_SHOVEL {
             @Override
             public String toString() {
-                return "ShoutGun";
+                return shovel;
             }
         }, DIAMOND_HOE {
             @Override
             public String toString() {
-                return "Bazooka";
+                return hoe;
             }
         }, DIAMOND_PICKAXE {
             @Override
             public String toString() {
-                return "Blaster";
+                return pickaxe;
             }
         }
     }
 
     @Override
     public void pickUp(Player player, ItemStack itemStack) {
-
         if (!Item.itemIsExist(player.getInventory(), itemStack)) {
             player.getInventory().addItem(itemStack);
             return;
@@ -103,7 +131,7 @@ public class Weapon implements Item {
     public void fire(Type type, Player player) {
         switch (type) {
             case DIAMOND_SHOVEL:
-                fractionShot(Snowball.class,0.1d, player);
+                fractionShot(Snowball.class, 0.1d, player);
                 break;
             case DIAMOND_HOE:
                 player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection());
@@ -111,13 +139,13 @@ public class Weapon implements Item {
             case DIAMOND_PICKAXE:
                 Projectile p = player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
                 Location loc1 = p.getLocation();
-                Location loc2 = getTargetBlock(player,40).getLocation();
-                Vector vector = getDirectionBetweenLocations(loc1,loc2);
+                Location loc2 = getTargetBlock(player, 40).getLocation();
+                Vector vector = getDirectionBetweenLocations(loc1, loc2);
 
                 for (double i = 1; i <= loc1.distance(loc2); i += 0.5) {
                     vector.multiply(i);
                     loc1.add(vector);
-                    loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK,loc1,1);
+                    loc1.getWorld().spawnParticle(Particle.FLAME, loc1, 5);
                     loc1.subtract(vector);
                     vector.normalize();
                 }

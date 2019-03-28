@@ -92,6 +92,7 @@ public class ItemSpawnBlock implements BehaviorBlock {
                     }, delay);
                     wait = false;
                 }
+                Main.log.info("New cicle");
             }, 50L, 50L);
             return true;
         } catch (Exception e) {
@@ -113,6 +114,10 @@ public class ItemSpawnBlock implements BehaviorBlock {
     }
 
     private boolean itemAbsent() {
+        if (item != null){
+            Main.log.info(item.getVelocity().toString());
+        }
+        //TODO fix it
         return item != null && !item.isDead() && item.getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block);
     }
 }
