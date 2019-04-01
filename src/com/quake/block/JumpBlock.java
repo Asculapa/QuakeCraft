@@ -74,7 +74,6 @@ public class JumpBlock implements BehaviorBlock, Listener {
     @Override
     public boolean removeBehavior() {
         if (plugin != null) {
-            PlayerPortalEvent.getHandlerList().unregister(this);
             PlayerMoveEvent.getHandlerList().unregister(this);
             return true;
         } else {

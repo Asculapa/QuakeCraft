@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
+
 public class ItemSpawnBlock implements BehaviorBlock {
     private String name;
     private ItemStack itemStack;
@@ -84,6 +85,9 @@ public class ItemSpawnBlock implements BehaviorBlock {
             taskID = scheduler.scheduleSyncRepeatingTask(plugin, () -> {
                 if (!itemAbsent() && wait) {
                     scheduler.scheduleSyncDelayedTask(plugin, () -> {
+                        if (item != null){
+                            item.remove();
+                        }
                         item = world.dropItem(spawnLocation, itemStack);
                         item.setVelocity(new Vector(0, 0, 0));
                         Main.log.info(item.getLocation().toString());
@@ -115,9 +119,9 @@ public class ItemSpawnBlock implements BehaviorBlock {
 
     private boolean itemAbsent() {
         if (item != null){
-            Main.log.info(item.getVelocity().toString());
+            Main.log.info("valid - " + item.isValid());
         }
         //TODO fix it
-        return item != null && !item.isDead() && item.getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block);
+        return item != null && item.isValid() && !item.isDead() && item.getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block);
     }
 }
