@@ -1,5 +1,6 @@
 package com.quake.listener;
 
+import com.quake.Main;
 import com.quake.UserInterface;
 import com.quake.item.Armor;
 import com.quake.item.Health;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -33,7 +35,7 @@ public class ItemListener implements Listener {
         delay = readConfig.getIntValue("attackDelay");
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
             if (event.getDamager() instanceof Snowball) {
@@ -44,7 +46,10 @@ public class ItemListener implements Listener {
                 event.setDamage(10d);
             }
         }
+    }
 
+    @EventHandler
+    public void entityDamageEvent(EntityDamageEvent event){
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             event.setDamage(0.5d);
         }

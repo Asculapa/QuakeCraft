@@ -26,7 +26,8 @@ public class ItemSpawnBlock implements BehaviorBlock {
     private World world;
     private boolean wait = true;
 
-    public ItemSpawnBlock(){}
+    public ItemSpawnBlock() {
+    }
 
     public ItemSpawnBlock(Block block, int delay, ItemStack itemStack, String name) {
         this.block = block;
@@ -83,9 +84,10 @@ public class ItemSpawnBlock implements BehaviorBlock {
     public boolean buildBehavior(Plugin plugin) {
         try {
             taskID = scheduler.scheduleSyncRepeatingTask(plugin, () -> {
+                //TODO fix here
                 if (!itemAbsent() && wait) {
                     scheduler.scheduleSyncDelayedTask(plugin, () -> {
-                        if (item != null){
+                        if (item != null) {
                             item.remove();
                         }
                         item = world.dropItem(spawnLocation, itemStack);
@@ -107,21 +109,20 @@ public class ItemSpawnBlock implements BehaviorBlock {
 
     @Override
     public boolean removeBehavior() {
-            try {
-                scheduler.cancelTask(taskID);
-                return true;
-            } catch (Exception e) {
-                Main.log.info("ItemSpawnBlock " + name + " not removed");
-                e.printStackTrace();
-                return false;
-            }
+        try {
+            scheduler.cancelTask(taskID);
+            return true;
+        } catch (Exception e) {
+            Main.log.info("ItemSpawnBlock " + name + " not removed");
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private boolean itemAbsent() {
-        if (item != null){
+        if (item != null) {
             Main.log.info("valid - " + item.isValid());
         }
-        //TODO fix it
         return item != null && item.isValid() && !item.isDead() && item.getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block);
     }
 }

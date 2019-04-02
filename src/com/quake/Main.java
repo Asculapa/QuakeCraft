@@ -14,7 +14,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,13 +21,13 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 
-public class Main extends JavaPlugin implements Listener, CommandExecutor {
+public class Main extends JavaPlugin implements CommandExecutor {
 
     public static final Logger log = Logger.getLogger("Minecraft");
     public static World world;
-    private ArrayList<PlayerSpawnBlock> playerSpawnBlocks;
-    private ArrayList<JumpBlock> jumpBlocks;
-    private ArrayList<ItemSpawnBlock> itemSpawnBlocks;
+    private static ArrayList<PlayerSpawnBlock> playerSpawnBlocks;
+    private static ArrayList<JumpBlock> jumpBlocks;
+    private static ArrayList<ItemSpawnBlock> itemSpawnBlocks;
 
 
     @Override
@@ -39,9 +38,8 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
         ReadConfig readConfig = new ReadConfig(this);
         Weapon.biuld(readConfig);
         Health.biuld(readConfig);
-        Bukkit.getServer().getPluginManager().registerEvents(this, this);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(readConfig), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new GameListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new GameListener(this), this);
         playerSpawnBlocks = readConfig.getPlayerSpawnBlocks();
         jumpBlocks = new ArrayList<>();
         itemSpawnBlocks = new ArrayList<>();
@@ -264,6 +262,10 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor {
             }
         }
         return false;
+    }
+
+    public static ArrayList<PlayerSpawnBlock> getPlayerSpawnBlocks(){
+        return playerSpawnBlocks;
     }
 
 }

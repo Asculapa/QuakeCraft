@@ -2,6 +2,7 @@ package com.quake.item;
 
 import com.quake.UserInterface;
 import com.quake.сonfig.ReadConfig;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -139,13 +140,13 @@ public class Weapon implements Item {
             case DIAMOND_PICKAXE:
                 Projectile p = player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
                 Location loc1 = p.getLocation();
-                Location loc2 = getTargetBlock(player, 40).getLocation();
+                Location loc2 = getTargetBlock(player, 100).getLocation();
                 Vector vector = getDirectionBetweenLocations(loc1, loc2);
 
                 for (double i = 1; i <= loc1.distance(loc2); i += 0.5) {
                     vector.multiply(i);
                     loc1.add(vector);
-                    loc1.getWorld().spawnParticle(Particle.FLAME, loc1, 5);
+                    loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK,loc1,5,0d,0d,0d,0d);
                     loc1.subtract(vector);
                     vector.normalize();
                 }
