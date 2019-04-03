@@ -15,7 +15,7 @@ public class Health implements Item {
     private static double middleHealth;
     private static double hugeHealth;
 
-    public static void biuld(ReadConfig readConfig) {
+    public static void build(ReadConfig readConfig) {
         smallHealth = readConfig.getDoubleValue("smallHealth");
         middleHealth = readConfig.getDoubleValue("middleHealth");
         hugeHealth = readConfig.getDoubleValue("hugeHealth");

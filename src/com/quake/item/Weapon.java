@@ -2,7 +2,6 @@ package com.quake.item;
 
 import com.quake.UserInterface;
 import com.quake.сonfig.ReadConfig;
-import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -24,7 +23,7 @@ public class Weapon implements Item {
     private static String hoe;
     private static String pickaxe;
 
-    public static void biuld(ReadConfig config) {
+    public static void build(ReadConfig config) {
 
         dropCount = config.getIntValue("dropCount");
         knockbackLevel = config.getIntValue("swordPower");

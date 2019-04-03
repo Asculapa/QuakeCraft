@@ -93,12 +93,12 @@ public class ItemSpawnBlock implements BehaviorBlock {
                         item = world.dropItem(spawnLocation, itemStack);
                         item.setVelocity(new Vector(0, 0, 0));
                         Main.log.info(item.getLocation().toString());
-                        Main.log.info("New item");
+                        //Main.log.info("New item");
                         wait = true;
                     }, delay);
                     wait = false;
                 }
-                Main.log.info("New cicle");
+                //Main.log.info("New cicle");
             }, 50L, 50L);
             return true;
         } catch (Exception e) {
@@ -120,9 +120,6 @@ public class ItemSpawnBlock implements BehaviorBlock {
     }
 
     private boolean itemAbsent() {
-        if (item != null) {
-            Main.log.info("valid - " + item.isValid());
-        }
         return item != null && item.isValid() && !item.isDead() && item.getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block);
     }
 }

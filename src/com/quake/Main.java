@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -32,25 +33,30 @@ public class Main extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onEnable() {
-
-        this.getLogger().info("Quake!");
         world = this.getServer().getWorld("world");
+        List<Entity> entList = world.getEntities();//get all entities in the world
+
+        for (Entity current : entList) {
+            if (current instanceof Item) {
+                current.remove();
+            }
+        }
         ReadConfig readConfig = new ReadConfig(this);
-        Weapon.biuld(readConfig);
-        Health.biuld(readConfig);
+        Weapon.build(readConfig);
+        Health.build(readConfig);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(readConfig), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GameListener(this), this);
         playerSpawnBlocks = readConfig.getPlayerSpawnBlocks();
         jumpBlocks = new ArrayList<>();
         itemSpawnBlocks = new ArrayList<>();
         for (BehaviorBlock s : readConfig.getBehaviorBlocks(JumpBlock.class)) {
-            if (!s.buildBehavior(this)){
+            if (!s.buildBehavior(this)) {
                 log.info(s.getName() + " not loaded!");
             }
             jumpBlocks.add((JumpBlock) s);
         }
         for (BehaviorBlock s : readConfig.getBehaviorBlocks(ItemSpawnBlock.class)) {
-            if (!s.buildBehavior(this)){
+            if (!s.buildBehavior(this)) {
                 log.info(s.getName() + " not loaded!");
             }
             itemSpawnBlocks.add((ItemSpawnBlock) s);
@@ -60,7 +66,7 @@ public class Main extends JavaPlugin implements CommandExecutor {
 
     @Override
     public void onDisable() {
-
+        log.info("QuakeCraft disabled!");
     }
 
     @Override
@@ -264,7 +270,7 @@ public class Main extends JavaPlugin implements CommandExecutor {
         return false;
     }
 
-    public static ArrayList<PlayerSpawnBlock> getPlayerSpawnBlocks(){
+    public static ArrayList<PlayerSpawnBlock> getPlayerSpawnBlocks() {
         return playerSpawnBlocks;
     }
 
