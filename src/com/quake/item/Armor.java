@@ -1,10 +1,39 @@
 package com.quake.item;
 
+import com.quake.сonfig.ReadConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class Armor implements Item {
+
+    private static String boots;
+    private static String helmet;
+    private static String chestplate;
+    private static String leggins;
+
+    public void build(ReadConfig config){
+        boots = config.getStringValue("boots");
+        helmet = config.getStringValue("helmet");
+        chestplate = config.getStringValue("chestplate");
+        leggins = config.getStringValue("leggins");
+
+        if (boots.equals("")) {
+            boots = "Bashmachki";
+        }
+
+        if (helmet.equals("")) {
+            helmet = "Nabaldazhnik";
+        }
+
+        if (chestplate.equals("")) {
+            chestplate = "NaGrudinin";
+        }
+
+        if (leggins.equals("")) {
+            leggins = "40 griven";
+        }
+    }
 
     public enum Type {
         DIAMOND_BOOTS {

@@ -4,7 +4,11 @@ smallHealth: 2d
 middleHealth: 5d
 hugeHealth: 10d
 attackDelay: 1000
-swordName: "Excalibur"
-shovelName: "ShoutGun"
-hoeName: "Bazooka"
-pickaxeName: "Blaster"
+sword: "Excalibur"
+shovel: "ShoutGun"
+hoe: "Bazooka"
+pickaxe: "Blaster"
+boots: "Bashmachki"
+chestplate: "NaGrudinin"
+helmet: "Nabaldazhnik"
+leggins: "40 griven"

@@ -47,8 +47,7 @@ public class GameListener implements Listener {
         } else {
             UserInterface.addKills(killed, -1);
         }
-
-        UserInterface.resetScoreBoard(killed);
+       // UserInterface.resetScoreBoard(killed);
 
     }
     @EventHandler

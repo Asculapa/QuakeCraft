@@ -44,6 +44,7 @@ public class Main extends JavaPlugin implements CommandExecutor {
         ReadConfig readConfig = new ReadConfig(this);
         Weapon.build(readConfig);
         Health.build(readConfig);
+        Weapon.build(readConfig);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(readConfig), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GameListener(this), this);
         playerSpawnBlocks = readConfig.getPlayerSpawnBlocks();
@@ -273,5 +274,4 @@ public class Main extends JavaPlugin implements CommandExecutor {
     public static ArrayList<PlayerSpawnBlock> getPlayerSpawnBlocks() {
         return playerSpawnBlocks;
     }
-
 }

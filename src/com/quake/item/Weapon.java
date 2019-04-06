@@ -27,10 +27,10 @@ public class Weapon implements Item {
 
         dropCount = config.getIntValue("dropCount");
         knockbackLevel = config.getIntValue("swordPower");
-        sword = config.getStringValue("swordName");
-        shovel = config.getStringValue("shovelName");
-        hoe = config.getStringValue("hoeName");
-        pickaxe = config.getStringValue("pickaxeName");
+        sword = config.getStringValue("sword");
+        shovel = config.getStringValue("shovel");
+        hoe = config.getStringValue("hoe");
+        pickaxe = config.getStringValue("pickaxe");
 
         if (sword.equals("")) {
             sword = "Sword";
@@ -134,7 +134,7 @@ public class Weapon implements Item {
                 fractionShot(Snowball.class, 0.1d, player);
                 break;
             case DIAMOND_HOE:
-                player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection());
+                player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection()).setIsIncendiary(false);
                 break;
             case DIAMOND_PICKAXE:
                 Projectile p = player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));

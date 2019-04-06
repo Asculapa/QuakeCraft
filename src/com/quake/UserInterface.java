@@ -6,9 +6,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public final class UserInterface {
     private static String resources = "Resources";
     private static String kills = ChatColor.RED + "Kills";
+    private static final int MAX_KILLS = 20;
 
     public static boolean createScoreBoard(Player player) {
         try {
@@ -49,6 +53,7 @@ public final class UserInterface {
         for (Weapon.Type t: Weapon.Type.values()) {
             player.getScoreboard().getObjective(resources).getScore(t.toString()).setScore(0);
         }
+        player.getScoreboard().getObjective(resources).getScore(kills).setScore(0);
     }
 
     public static int getKills(Player player) {
@@ -57,6 +62,21 @@ public final class UserInterface {
 
     public static void addKills(Player player, int killCount) {
         player.getScoreboard().getObjective(resources).getScore(kills).setScore(getKills(player) + killCount);
+        if (player.getScoreboard().getObjective(resources).getScore(kills).getScore() >= MAX_KILLS){
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    Bukkit.getServer().getOnlinePlayers().forEach(p->{
+                        resetScoreBoard(p);
+                        p.spigot().respawn();
+                    });
+                }
+            }, 3000);
+            announceTheWinner(player);
+        }
     }
 
     public static int getAmmo(Player player, Weapon.Type weapon) {
@@ -76,5 +96,16 @@ public final class UserInterface {
             Main.log.info("I can't add ammo");
             e.printStackTrace();
         }
+    }
+
+    private static void announceTheWinner(Player p){
+        Bukkit.getServer().getOnlinePlayers().forEach(player->{
+            if (p.equals(player)){
+                p.sendMessage(ChatColor.AQUA + "OMG you did it! Great game!");
+            }else {
+                player.sendMessage(ChatColor.DARK_AQUA + "The winner of this game becomes " + ChatColor.BLUE + p.getName());
+            }
+        });
+
     }
 }
