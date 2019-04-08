@@ -32,19 +32,19 @@ public class Weapon implements Item {
         hoe = config.getStringValue("hoe");
         pickaxe = config.getStringValue("pickaxe");
 
-        if (sword.equals("")) {
+        if (sword == null || sword.equals("")) {
             sword = "Sword";
         }
 
-        if (shovel.equals("")) {
+        if (shovel == null || shovel.equals("")) {
             shovel = "Shovel";
         }
 
-        if (hoe.equals("")) {
+        if (hoe == null ||hoe.equals("")) {
             hoe = "Hoe";
         }
 
-        if (pickaxe.equals("")) {
+        if (pickaxe == null ||pickaxe.equals("")) {
             pickaxe = "Pickaxe";
         }
     }

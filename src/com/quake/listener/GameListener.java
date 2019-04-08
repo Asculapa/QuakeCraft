@@ -12,8 +12,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 public class GameListener implements Listener {
 
@@ -43,12 +41,11 @@ public class GameListener implements Listener {
         Player killed = e.getEntity();
 
         if (killer != null && !killer.equals(killed)) {
-            UserInterface.addKills(killer, 1);
+            UserInterface.addKills(killer, 1,plugin);
         } else {
-            UserInterface.addKills(killed, -1);
+            UserInterface.addKills(killed, 23,plugin);
         }
-       // UserInterface.resetScoreBoard(killed);
-
+        UserInterface.resetScoreBoard(killed);
     }
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event){

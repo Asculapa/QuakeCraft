@@ -4,10 +4,8 @@ import com.quake.item.Weapon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.*;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public final class UserInterface {
     private static String resources = "Resources";
@@ -49,8 +47,8 @@ public final class UserInterface {
         }
     }
 
-    public static void resetScoreBoard(Player player){
-        for (Weapon.Type t: Weapon.Type.values()) {
+    public static void resetScoreBoard(Player player) {
+        for (Weapon.Type t : Weapon.Type.values()) {
             player.getScoreboard().getObjective(resources).getScore(t.toString()).setScore(0);
         }
         player.getScoreboard().getObjective(resources).getScore(kills).setScore(0);
@@ -60,21 +58,15 @@ public final class UserInterface {
         return player.getScoreboard().getObjective(resources).getScore(kills).getScore();
     }
 
-    public static void addKills(Player player, int killCount) {
+    public static void addKills(Player player, int killCount, Plugin plugin) {
         player.getScoreboard().getObjective(resources).getScore(kills).setScore(getKills(player) + killCount);
-        if (player.getScoreboard().getObjective(resources).getScore(kills).getScore() >= MAX_KILLS){
+        if (player.getScoreboard().getObjective(resources).getScore(kills).getScore() >= MAX_KILLS) {
 
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> Bukkit.getServer().getOnlinePlayers().forEach(p -> {
+                resetScoreBoard(p);
+                p.spigot().respawn();
+            }), 400);
 
-                @Override
-                public void run() {
-                    Bukkit.getServer().getOnlinePlayers().forEach(p->{
-                        resetScoreBoard(p);
-                        p.spigot().respawn();
-                    });
-                }
-            }, 3000);
             announceTheWinner(player);
         }
     }
@@ -98,11 +90,11 @@ public final class UserInterface {
         }
     }
 
-    private static void announceTheWinner(Player p){
-        Bukkit.getServer().getOnlinePlayers().forEach(player->{
-            if (p.equals(player)){
+    private static void announceTheWinner(Player p) {
+        Bukkit.getServer().getOnlinePlayers().forEach(player -> {
+            if (p.equals(player)) {
                 p.sendMessage(ChatColor.AQUA + "OMG you did it! Great game!");
-            }else {
+            } else {
                 player.sendMessage(ChatColor.DARK_AQUA + "The winner of this game becomes " + ChatColor.BLUE + p.getName());
             }
         });

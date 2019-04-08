@@ -1,15 +1,13 @@
 package com.quake.block;
 
 import com.quake.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
 public class JumpBlock implements BehaviorBlock, Listener {
@@ -18,7 +16,8 @@ public class JumpBlock implements BehaviorBlock, Listener {
     private String name;
     private Vector direction;
     private double power;
-    private Plugin plugin;
+    private int taskID;
+    private BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 
     public JumpBlock(){}
 
@@ -66,31 +65,31 @@ public class JumpBlock implements BehaviorBlock, Listener {
 
     @Override
     public boolean buildBehavior(Plugin plugin) {
-        this.plugin = plugin;
-        this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
+        taskID = scheduler.scheduleSyncRepeatingTask(plugin,()->{
+            Bukkit.getOnlinePlayers().forEach(player->{
+                if (player.getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block)){
+                    if (direction == null) {
+                        player.setVelocity(player.getEyeLocation().getDirection().multiply(power));
+                    } else {
+                        player.setVelocity(direction.multiply(power));
+                    }
+                }
+            });
+        },1L,1L);
         return true;
     }
 
     @Override
     public boolean removeBehavior() {
-        if (plugin != null) {
-            PlayerMoveEvent.getHandlerList().unregister(this);
+        try {
+            scheduler.cancelTask(taskID);
             return true;
-        } else {
+        } catch (Exception e) {
+            Main.log.info("Jumpblock " + name + " not removed");
+            e.printStackTrace();
             return false;
         }
     }
 
-    @EventHandler
-    private void onPlyerMove(PlayerMoveEvent event) {
-        if (event.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block)) {
-            Player player = event.getPlayer();
-            if (direction == null) {
-                player.setVelocity(player.getEyeLocation().getDirection().multiply(power));
-            } else {
-                player.setVelocity(direction.multiply(power));
-            }
-        }
-    }
 }
 

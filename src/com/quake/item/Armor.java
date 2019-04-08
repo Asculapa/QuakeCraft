@@ -18,19 +18,19 @@ public class Armor implements Item {
         chestplate = config.getStringValue("chestplate");
         leggins = config.getStringValue("leggins");
 
-        if (boots.equals("")) {
+        if (boots == null || boots.equals("")) {
             boots = "Bashmachki";
         }
 
-        if (helmet.equals("")) {
+        if (helmet == null ||helmet.equals("")) {
             helmet = "Nabaldazhnik";
         }
 
-        if (chestplate.equals("")) {
+        if (chestplate == null ||chestplate.equals("")) {
             chestplate = "NaGrudinin";
         }
 
-        if (leggins.equals("")) {
+        if (leggins == null ||leggins.equals("")) {
             leggins = "40 griven";
         }
     }
