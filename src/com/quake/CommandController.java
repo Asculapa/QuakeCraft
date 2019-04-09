@@ -27,10 +27,12 @@ public class CommandController {
             direction = player.getEyeLocation().getDirection();
         }
 
-        if (power <= 0d) {
-            power = 1d;
-        } else if (power > 50) {
-            power = 50;
+        if (power <= 1) {
+            power = 1.1;
+            errorMessage("Are you stupid? Ok, i help you:" + ChatColor.YELLOW + " power = 1.1(MIN)");
+        } else if (power > 5) {
+            power = 5;
+            errorMessage("Are you stupid? Ok, i help you:" + ChatColor.YELLOW + " power = 5(MAX)");
         }
 
         jumpBlock = new JumpBlock(player.getLocation().getBlock().getRelative(BlockFace.DOWN), direction, power, name);
@@ -48,11 +50,11 @@ public class CommandController {
     public boolean removeBlock(ArrayList<? extends Block> list, WriteConfig config, String name) {
         for (Block block : list) {
             if (block.getName().equals(name)) {
-                if (config.removeBlock(block)){
-                    if (block instanceof BehaviorBlock){
-                       if (!((BehaviorBlock)block).removeBehavior()){
-                           return false;
-                       }
+                if (config.removeBlock(block)) {
+                    if (block instanceof BehaviorBlock) {
+                        if (!((BehaviorBlock) block).removeBehavior()) {
+                            return false;
+                        }
                     }
                     list.remove(block);
                     return true;
@@ -82,7 +84,6 @@ public class CommandController {
         printList(list, page * listLength, (page * listLength) + listLength);
         player.sendMessage("Total number of blocks: " + list.size());
         player.sendMessage("Page " + page + "/" + list.size() / listLength);
-        return;
     }
 
     private void printList(ArrayList<? extends Block> list, int start, int end) {
@@ -103,7 +104,7 @@ public class CommandController {
         for (int a = start; a <= end; a++) {
             Block block = list.get(a);
             Location loc = block.getBlock().getLocation();
-            player.sendMessage( ChatColor.BLUE + block.getName() + ":" + ChatColor.YELLOW + " X = " + loc.getX() + "; Y = " + loc.getY() + "; Z = " + loc.getZ() + ";");
+            player.sendMessage(ChatColor.BLUE + block.getName() + ":" + ChatColor.YELLOW + " X = " + loc.getX() + "; Y = " + loc.getY() + "; Z = " + loc.getZ() + ";");
         }
     }
 
@@ -114,6 +115,7 @@ public class CommandController {
     public void successCreatedBlock(String block) {
         player.sendMessage(ChatColor.BLUE + block + ChatColor.GREEN + " was created successfully.");
     }
+
     public void successRemovedBlock(String block) {
         player.sendMessage(ChatColor.BLUE + block + ChatColor.AQUA + " was removed successfully.");
     }

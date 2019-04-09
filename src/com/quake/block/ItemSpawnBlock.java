@@ -84,7 +84,6 @@ public class ItemSpawnBlock implements BehaviorBlock {
     public boolean buildBehavior(Plugin plugin) {
         try {
             taskID = scheduler.scheduleSyncRepeatingTask(plugin, () -> {
-                //TODO fix here
                 if (!itemAbsent() && wait) {
                     scheduler.scheduleSyncDelayedTask(plugin, () -> {
                         if (item != null) {

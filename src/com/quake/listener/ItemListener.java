@@ -6,6 +6,7 @@ import com.quake.item.Armor;
 import com.quake.item.Health;
 import com.quake.item.Weapon;
 import com.quake.сonfig.ReadConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -30,9 +32,11 @@ import static com.quake.item.Item.valueIsExist;
 public class ItemListener implements Listener {
     private ArrayList<Player> players = new ArrayList<>();
     private static int delay;
+    private static Plugin plugin;
 
-    public ItemListener(ReadConfig readConfig) {
+    public ItemListener(ReadConfig readConfig, Plugin p) {
         delay = readConfig.getIntValue("attackDelay");
+        plugin = p;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -49,7 +53,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler
-    public void entityDamageEvent(EntityDamageEvent event){
+    public void entityDamageEvent(EntityDamageEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             event.setDamage(0.5d);
         }
@@ -63,24 +67,24 @@ public class ItemListener implements Listener {
         players.add(player);
     }
 
+    private synchronized boolean cntPlayer(Player player) {
+        return players.contains(player);
+    }
+
+
     @EventHandler
     public void playerInteract(PlayerInteractEvent event) {
         Player p = event.getPlayer();
         Action a = event.getAction();
 
-        if (players.contains(p)) {
+        if (cntPlayer(p)) {
             event.setCancelled(true);
             return;
         }
 
         addPlayer(p);
-
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                delPlayer(p);
-            }
-        }, delay);
+        Main.log.info("Delay - " + delay);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> delPlayer(p), delay);
 
         ItemStack item = event.getItem();
         if (item == null) {
