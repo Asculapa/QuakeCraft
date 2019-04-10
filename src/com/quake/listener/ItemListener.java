@@ -24,8 +24,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static com.quake.item.Item.valueIsExist;
 
@@ -43,11 +41,11 @@ public class ItemListener implements Listener {
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
             if (event.getDamager() instanceof Snowball) {
-                event.setDamage(3.333d);
+                event.setDamage(4.5d);
             } else if (event.getDamager() instanceof Arrow) {
-                event.setDamage(19d);
+                event.setDamage(8d);
             } else if (event.getDamager() instanceof Fireball) {
-                event.setDamage(10d);
+                event.setDamage(12d);
             }
         }
     }

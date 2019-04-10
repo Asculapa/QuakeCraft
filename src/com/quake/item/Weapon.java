@@ -137,8 +137,8 @@ public class Weapon implements Item {
                 player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection()).setIsIncendiary(false);
                 break;
             case DIAMOND_PICKAXE:
-                Projectile p = player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
-                Location loc1 = p.getLocation();
+                player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
+                Location loc1 = player.getEyeLocation();
                 Location loc2 = getTargetBlock(player, 100).getLocation();
                 Vector vector = getDirectionBetweenLocations(loc1, loc2);
 

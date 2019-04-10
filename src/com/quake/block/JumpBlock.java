@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
+//TODO fix class
 public class JumpBlock implements BehaviorBlock, Listener {
 
     private Block block;

@@ -83,7 +83,7 @@ public class CommandController {
         }
         printList(list, page * listLength, (page * listLength) + listLength);
         player.sendMessage("Total number of blocks: " + list.size());
-        player.sendMessage("Page " + page + "/" + list.size() / listLength);
+        player.sendMessage("Page " + page + "/" + (list.size() % listLength == 0 ? list.size()/listLength - 1 : list.size()/listLength));
     }
 
     private void printList(ArrayList<? extends Block> list, int start, int end) {

@@ -11,6 +11,7 @@ public final class UserInterface {
     private static String resources = "Resources";
     private static String kills = ChatColor.RED + "Kills";
     private static final int MAX_KILLS = 20;
+    private static boolean winner;
 
     public static boolean createScoreBoard(Player player) {
         try {
@@ -60,13 +61,12 @@ public final class UserInterface {
 
     public static void addKills(Player player, int killCount, Plugin plugin) {
         player.getScoreboard().getObjective(resources).getScore(kills).setScore(getKills(player) + killCount);
-        if (player.getScoreboard().getObjective(resources).getScore(kills).getScore() >= MAX_KILLS) {
-
+        if (player.getScoreboard().getObjective(resources).getScore(kills).getScore() >= MAX_KILLS && !winner) {
+            winner = true;
             Bukkit.getScheduler().runTaskLater(plugin, () -> Bukkit.getServer().getOnlinePlayers().forEach(p -> {
                 resetScoreBoard(p);
                 p.spigot().respawn();
-            }), 400);
-
+            }), 50);
             announceTheWinner(player);
         }
     }

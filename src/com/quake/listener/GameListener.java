@@ -43,7 +43,7 @@ public class GameListener implements Listener {
         if (killer != null && !killer.equals(killed)) {
             UserInterface.addKills(killer, 1,plugin);
         } else {
-            UserInterface.addKills(killed, 23,plugin);
+            UserInterface.addKills(killed, -1,plugin);
         }
         UserInterface.resetScoreBoard(killed);
     }
