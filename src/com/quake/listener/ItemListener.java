@@ -75,14 +75,6 @@ public class ItemListener implements Listener {
         Player p = event.getPlayer();
         Action a = event.getAction();
 
-        if (cntPlayer(p)) {
-            event.setCancelled(true);
-            return;
-        }
-
-        addPlayer(p);
-        Main.log.info("Delay - " + delay);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> delPlayer(p), delay);
 
         ItemStack item = event.getItem();
         if (item == null) {
@@ -92,6 +84,13 @@ public class ItemListener implements Listener {
         if ((a == Action.LEFT_CLICK_BLOCK || a == Action.LEFT_CLICK_AIR) &&
                 com.quake.item.Item.valueIsExist(Weapon.Type.values(), s)
                 && event.getItem().getItemMeta().getDisplayName().equals(Weapon.Type.valueOf(s).toString())) {
+            if (cntPlayer(p)) {
+                event.setCancelled(true);
+                return;
+            }
+            addPlayer(p);
+            Main.log.info("Delay - " + delay);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> delPlayer(p), delay);
             if (UserInterface.getAmmo(p, Weapon.Type.valueOf(s)) > 0) {
                 Weapon w = new Weapon();
                 w.fire(Weapon.Type.valueOf(s), p);

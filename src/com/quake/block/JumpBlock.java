@@ -20,7 +20,8 @@ public class JumpBlock implements BehaviorBlock, Listener {
     private int taskID;
     private BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 
-    public JumpBlock(){}
+    public JumpBlock() {
+    }
 
     public JumpBlock(Block block, Vector direction, double power, String name) {
         this.block = block;
@@ -55,7 +56,7 @@ public class JumpBlock implements BehaviorBlock, Listener {
         try {
             Vector direction = section.getVector("direction");
             int power = section.getInt("power");
-            return new JumpBlock(block,direction,power,name);
+            return new JumpBlock(block, direction, power, name);
         } catch (Exception e) {
             Main.log.info("I can't create " + getBlockClass());
             e.printStackTrace();
@@ -66,17 +67,19 @@ public class JumpBlock implements BehaviorBlock, Listener {
 
     @Override
     public boolean buildBehavior(Plugin plugin) {
-        taskID = scheduler.scheduleSyncRepeatingTask(plugin,()->{
-            Bukkit.getOnlinePlayers().forEach(player->{
-                if (player.getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block)){
+        taskID = scheduler.scheduleSyncRepeatingTask(plugin, () -> {
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                if (player.getLocation().getBlock().getRelative(BlockFace.DOWN).equals(block)) {
+                    Vector v = direction;
                     if (direction == null) {
-                        player.setVelocity(player.getEyeLocation().getDirection().multiply(power));
+                        player.setVelocity(player.getEyeLocation().getDirection().normalize().multiply(power));
                     } else {
-                        player.setVelocity(direction.multiply(power));
+                        player.setVelocity(v.normalize().multiply(power)
+                        );
                     }
                 }
             });
-        },5L,5L);
+        }, 5L, 5L);
         return true;
     }
 

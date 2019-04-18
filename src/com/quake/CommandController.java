@@ -28,10 +28,10 @@ public class CommandController {
         }
 
         if (power <= 1) {
-            power = 1.1;
+            power = 1.1d;
             errorMessage("Are you stupid? Ok, i help you:" + ChatColor.YELLOW + " power = 1.1(MIN)");
-        } else if (power > 5) {
-            power = 5;
+        } else if (power > 5d) {
+            power = 5d;
             errorMessage("Are you stupid? Ok, i help you:" + ChatColor.YELLOW + " power = 5(MAX)");
         }
 

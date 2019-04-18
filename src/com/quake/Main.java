@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -34,18 +35,12 @@ public class Main extends JavaPlugin implements CommandExecutor {
     @Override
     public void onEnable() {
         world = this.getServer().getWorld("world");
-        List<Entity> entList = world.getEntities();//get all entities in the world
-
-        for (Entity current : entList) {
-            if (current instanceof Item) {
-                current.remove();
-            }
-        }
+        removeItems(world);
         ReadConfig readConfig = new ReadConfig(this);
         Weapon.build(readConfig);
         Health.build(readConfig);
         Weapon.build(readConfig);
-        Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(readConfig,this), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(readConfig, this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GameListener(this), this);
         playerSpawnBlocks = readConfig.getPlayerSpawnBlocks();
         jumpBlocks = new ArrayList<>();
@@ -273,5 +268,16 @@ public class Main extends JavaPlugin implements CommandExecutor {
 
     public static ArrayList<PlayerSpawnBlock> getPlayerSpawnBlocks() {
         return playerSpawnBlocks;
+    }
+
+    public static void removeItems(World world) {
+        List<Entity> list = world.getEntities();
+        Iterator<Entity> entities = list.iterator();
+        while (entities.hasNext()) {
+            Entity entity = entities.next();
+            if (entity instanceof Item) {
+                entity.remove();
+            }
+        }
     }
 }

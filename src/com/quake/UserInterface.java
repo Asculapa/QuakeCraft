@@ -52,7 +52,6 @@ public final class UserInterface {
         for (Weapon.Type t : Weapon.Type.values()) {
             player.getScoreboard().getObjective(resources).getScore(t.toString()).setScore(0);
         }
-        player.getScoreboard().getObjective(resources).getScore(kills).setScore(0);
     }
 
     public static int getKills(Player player) {
@@ -63,10 +62,15 @@ public final class UserInterface {
         player.getScoreboard().getObjective(resources).getScore(kills).setScore(getKills(player) + killCount);
         if (player.getScoreboard().getObjective(resources).getScore(kills).getScore() >= MAX_KILLS && !winner) {
             winner = true;
-            Bukkit.getScheduler().runTaskLater(plugin, () -> Bukkit.getServer().getOnlinePlayers().forEach(p -> {
-                resetScoreBoard(p);
-                p.spigot().respawn();
-            }), 50);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                Bukkit.getServer().getOnlinePlayers().forEach(p -> {
+                    p.setHealth(0);
+                    resetScoreBoard(p);
+                    p.getScoreboard().getObjective(resources).getScore(kills).setScore(0);
+                });
+                Main.removeItems(player.getWorld());
+                winner = false;
+            }, 50);
             announceTheWinner(player);
         }
     }
