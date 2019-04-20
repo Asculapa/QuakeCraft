@@ -89,7 +89,6 @@ public class ItemListener implements Listener {
                 return;
             }
             addPlayer(p);
-            Main.log.info("Delay - " + delay);
             Bukkit.getScheduler().runTaskLater(plugin, () -> delPlayer(p), delay);
             if (UserInterface.getAmmo(p, Weapon.Type.valueOf(s)) > 0) {
                 Weapon w = new Weapon();

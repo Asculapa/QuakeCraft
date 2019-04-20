@@ -68,9 +68,6 @@ public class GameListener implements Listener {
     @EventHandler
     public void PickUpArrow(PlayerPickupArrowEvent event) {
         event.getArrow().remove();
-        //TODO test
-        UserInterface.addKills(event.getPlayer(), 26, plugin);
-        Main.log.info("Test");
         event.setCancelled(true);
     }
 

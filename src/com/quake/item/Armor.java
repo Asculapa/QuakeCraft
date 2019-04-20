@@ -12,7 +12,7 @@ public class Armor implements Item {
     private static String chestplate;
     private static String leggins;
 
-    public void build(ReadConfig config){
+    public static void build(ReadConfig config){
         boots = config.getStringValue("boots");
         helmet = config.getStringValue("helmet");
         chestplate = config.getStringValue("chestplate");
@@ -39,22 +39,22 @@ public class Armor implements Item {
         DIAMOND_BOOTS {
             @Override
             public String toString() {
-                return "Bashmachki";
+                return boots;
             }
         }, DIAMOND_HELMET {
             @Override
             public String toString() {
-                return "Nabaldazhnik";
+                return helmet;
             }
         }, DIAMOND_CHESTPLATE {
             @Override
             public String toString() {
-                return "NaGrudinin";
+                return chestplate;
             }
         }, DIAMOND_LEGGINGS {
             @Override
             public String toString() {
-                return "40 griven";
+                return leggins;
             }
         }
     }
