@@ -134,7 +134,7 @@ public class Main extends JavaPlugin implements CommandExecutor {
                     return true;
                 }
 
-                if (!isInt(args[i + 1])) {
+                if (!isInt(args[i + 1]) || Integer.valueOf(args[i + 1]) < 25) {
                     controller.errorMessage("Incorrect delay!");
                     return true;
                 }

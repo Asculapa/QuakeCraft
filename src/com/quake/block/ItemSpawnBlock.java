@@ -95,7 +95,7 @@ public class ItemSpawnBlock implements BehaviorBlock {
                     }, delay);
                     wait = false;
                 }
-            }, 50L, 50L);
+            }, 25L, 25L);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

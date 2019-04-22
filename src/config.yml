@@ -3,7 +3,7 @@ swordPower: 3
 smallHealth: 2d
 middleHealth: 5d
 hugeHealth: 10d
-attackDelay: 1000
+attackDelay: 25
 sword: "Excalibur"
 shovel: "ShoutGun"
 hoe: "Bazooka"
