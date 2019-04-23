@@ -32,7 +32,7 @@ public interface Item {
 
     static Enum getEnumByName(Enum[] values, String string) {
         for (Enum e : values) {
-            if (e.name().equals(string)) {
+            if (e.name().compareToIgnoreCase(string) == 0) {
                 return e;
             }
         }

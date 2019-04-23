@@ -40,13 +40,24 @@ public class Weapon implements Item {
             shovel = "Shovel";
         }
 
-        if (hoe == null ||hoe.equals("")) {
+        if (hoe == null || hoe.equals("")) {
             hoe = "Hoe";
         }
 
-        if (pickaxe == null ||pickaxe.equals("")) {
+        if (pickaxe == null || pickaxe.equals("")) {
             pickaxe = "Pickaxe";
         }
+
+        if (knockbackLevel > 5) {
+            knockbackLevel = 5;
+        } else if (knockbackLevel < 0) {
+            knockbackLevel = 0;
+        }
+
+        if (dropCount < 0){
+            dropCount = 0;
+        }
+
     }
 
     public enum Type {
@@ -145,7 +156,7 @@ public class Weapon implements Item {
                 for (double i = 1; i <= loc1.distance(loc2); i += 0.5) {
                     vector.multiply(i);
                     loc1.add(vector);
-                    loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK,loc1,5,0d,0d,0d,0d);
+                    loc1.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, loc1, 5, 0d, 0d, 0d, 0d);
                     loc1.subtract(vector);
                     vector.normalize();
                 }

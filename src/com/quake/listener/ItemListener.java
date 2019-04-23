@@ -1,6 +1,5 @@
 package com.quake.listener;
 
-import com.quake.Main;
 import com.quake.UserInterface;
 import com.quake.item.Armor;
 import com.quake.item.Health;
@@ -34,6 +33,9 @@ public class ItemListener implements Listener {
 
     public ItemListener(ReadConfig readConfig, Plugin p) {
         delay = readConfig.getIntValue("attackDelay");
+        if (delay < 0 || delay > 500) {
+            delay = 500;
+        }
         plugin = p;
     }
 
@@ -88,8 +90,10 @@ public class ItemListener implements Listener {
                 event.setCancelled(true);
                 return;
             }
-            addPlayer(p);
-            Bukkit.getScheduler().runTaskLater(plugin, () -> delPlayer(p), delay);
+            if (delay != 0) {
+                addPlayer(p);
+                Bukkit.getScheduler().runTaskLater(plugin, () -> delPlayer(p), delay);
+            }
             if (UserInterface.getAmmo(p, Weapon.Type.valueOf(s)) > 0) {
                 Weapon w = new Weapon();
                 w.fire(Weapon.Type.valueOf(s), p);

@@ -91,7 +91,10 @@ public class WriteConfig extends AbstractConfig {
             if (section == null || !section.isSet(block.getName())) {
                 return false;
             }
+            Main.log.info(section.getCurrentPath());
+            Main.log.info(block.getName());
             section.set(block.getName(), null);
+            saveConfig();
             return true;
         } catch (Exception e) {
             Main.log.info("I can't remove " + block.getName());
