@@ -26,11 +26,11 @@ This block is designed to throw the player in a defined direction and with a def
 **power** - is the power of the player's throw.The range is from  **_1.1_** to **_5_**.
 #### Example
 ``
-⋅⋅*/newjumpblock directed 2.3 testBlock2 
+/newjumpblock directed 2.3 testBlock2 
 ``
 OR
 ``
-⋅⋅*/newjumpblock free 4.1 testBlock22
+/newjumpblock free 4.1 testBlock22
 ``
 ### Item block
 This block is assigned to spawn items such as armor, weapons, healing items and ammunition.
@@ -53,7 +53,9 @@ OR
 ``
 /newitemblock health huge 27 testBlock4
 ``
+
 OR
+
 ``
 /newitemblock armor Bashmachki 50 testBlock5
 ``
