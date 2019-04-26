@@ -26,6 +26,8 @@ public class GameListener implements Listener {
         setDefaultEffects(event.getPlayer());
         clearInventory(player);
         clearArmor(player);
+        player.setHealth(20d);
+        player.teleport(getRandomSpawnBlock().getBlock().getLocation());
     }
 
     public GameListener(Plugin plugin) {
@@ -59,7 +61,7 @@ public class GameListener implements Listener {
         Player player = event.getPlayer();
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> setDefaultEffects(player), 20);
         if (Main.getPlayerSpawnBlocks().size() != 0) {
-            PlayerSpawnBlock block = Main.getPlayerSpawnBlocks().get((int) (Math.random() * Main.getPlayerSpawnBlocks().size()));
+            PlayerSpawnBlock block = getRandomSpawnBlock();
             event.setRespawnLocation(block.getBlock().getLocation().add(0.5d, 0, 0.5d));
         }
         setDefaultEffects(event.getPlayer());
@@ -81,5 +83,8 @@ public class GameListener implements Listener {
         player.getInventory().setChestplate(null);
         player.getInventory().setLeggings(null);
         player.getInventory().setBoots(null);
+    }
+    private PlayerSpawnBlock getRandomSpawnBlock(){
+       return Main.getPlayerSpawnBlocks().get((int) (Math.random() * Main.getPlayerSpawnBlocks().size()));
     }
 }

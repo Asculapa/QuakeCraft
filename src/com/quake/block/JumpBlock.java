@@ -78,7 +78,7 @@ public class JumpBlock implements BehaviorBlock, Listener {
                     }
                 }
             });
-        }, 5L, 5L);
+        }, 1L, 1L);
         return true;
     }
 
