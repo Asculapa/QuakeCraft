@@ -28,6 +28,7 @@ This block is designed to throw the player in a defined direction and with a def
 | ------------- |:-------------:|
 | **_directed_**      | The direction of the flight is determined by direction the player is looking at while using the command |
 | **_free_**      | The direction of the flight is determined by direction the player is looking at while stepping on the block      |
+
 **power** - is the power of the player's throw.The range is from  **_1.1_** to **_5_**.
 #### Example
 
