@@ -88,7 +88,6 @@ public class Weapon implements Item {
     public void pickUp(Player player, ItemStack itemStack) {
         if (!Item.itemIsExist(player.getInventory(), itemStack)) {
             player.getInventory().addItem(itemStack);
-            return;
         }
         if (itemStack.getItemMeta().getDisplayName().equals(Type.DIAMOND_SWORD.toString())) {
             return;
