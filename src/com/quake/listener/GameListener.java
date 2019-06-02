@@ -5,12 +5,12 @@ import com.quake.PlayerEffect;
 import com.quake.UserInterface;
 import com.quake.block.PlayerSpawnBlock;
 import com.quake.item.Weapon;
+import com.quake.сonfig.ReadConfig;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -21,6 +21,14 @@ import org.bukkit.plugin.Plugin;
 public class GameListener implements Listener {
 
     private Plugin plugin;
+    private static float explosionDamage = 3F;
+
+    public static void build(ReadConfig readConfig){
+        double f = readConfig.getDoubleValue("explosionRadius");
+        if (f != 0){
+            explosionDamage = (float) f;
+        }
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -81,7 +89,7 @@ public class GameListener implements Listener {
     public void onExplosionPrime(ExplosionPrimeEvent event) {
         Entity ent = event.getEntity();
         if (ent instanceof Fireball) {
-            event.setRadius(3F);
+            event.setRadius(explosionDamage);
         }
     }
 
@@ -103,9 +111,6 @@ public class GameListener implements Listener {
         player.getInventory().setBoots(null);
     }
     private PlayerSpawnBlock getRandomSpawnBlock(){
-        if (Main.getPlayerSpawnBlocks().size() == 0){
-            return null;
-        }
         return Main.getPlayerSpawnBlocks().get((int) (Math.random() * Main.getPlayerSpawnBlocks().size()));
     }
 }

@@ -30,6 +30,9 @@ public class ItemListener implements Listener {
     private ArrayList<Player> players = new ArrayList<>();
     private static int delay;
     private static Plugin plugin;
+    private static double shovelDamage = 4.5d;
+    private static double hoeDamage = 12d;
+    private static double pickaxeDamage = 8d;
 
     public ItemListener(ReadConfig readConfig, Plugin p) {
         delay = readConfig.getIntValue("attackDelay");
@@ -39,15 +42,34 @@ public class ItemListener implements Listener {
         plugin = p;
     }
 
+    public static void build(ReadConfig readConfig){
+        double sd = readConfig.getDoubleValue("shovelDamage");
+        double hd = readConfig.getDoubleValue("shovelDamage");
+        double pd = readConfig.getDoubleValue("shovelDamage");
+
+        if (sd != 0){
+            shovelDamage = sd;
+        }
+
+        if (hd != 0){
+            hoeDamage = hd;
+        }
+
+        if (pd != 0){
+            pickaxeDamage = pd;
+        }
+
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void entityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
             if (event.getDamager() instanceof Snowball) {
-                event.setDamage(4.5d);
+                event.setDamage(shovelDamage);
             } else if (event.getDamager() instanceof Arrow) {
-                event.setDamage(8d);
+                event.setDamage(pickaxeDamage);
             } else if (event.getDamager() instanceof Fireball) {
-                event.setDamage(12d);
+                event.setDamage(hoeDamage);
             }
         }
     }
