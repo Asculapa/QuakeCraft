@@ -41,6 +41,7 @@ public class Main extends JavaPlugin implements CommandExecutor {
         Health.build(readConfig);
         Armor.build(readConfig);
         ItemListener.build(readConfig);
+        GameListener.build(readConfig);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemListener(readConfig, this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new GameListener(this), this);
         playerSpawnBlocks = readConfig.getPlayerSpawnBlocks();
