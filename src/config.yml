@@ -1,8 +1,8 @@
 dropCount: 2
 swordPower: 3
-smallHealth: 2d
-middleHealth: 5d
-hugeHealth: 10d
+smallHealth: 2
+middleHealth: 5
+hugeHealth: 10
 attackDelay: 25
 sword: "Excalibur"
 shovel: "ShoutGun"
@@ -11,4 +11,4 @@ pickaxe: "Blaster"
 boots: "Bashmachki"
 chestplate: "NaGrudinin"
 helmet: "Nabaldazhnik"
-leggins: "40 griven"
+leggins: "40griven"

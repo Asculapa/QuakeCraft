@@ -1,5 +1,6 @@
 package com.quake.item;
 
+import com.quake.Main;
 import com.quake.UserInterface;
 import com.quake.сonfig.ReadConfig;
 import org.bukkit.Material;
@@ -144,7 +145,10 @@ public class Weapon implements Item {
                 fractionShot(Snowball.class, 0.1d, player);
                 break;
             case DIAMOND_HOE:
-                player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection()).setIsIncendiary(false);
+                Fireball fireball = player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection().multiply(2));
+                Main.log.info("Here - " + fireball.doesBounce());
+                fireball.setIsIncendiary(false);
+                fireball.setBounce(false);
                 break;
             case DIAMOND_PICKAXE:
                 player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));

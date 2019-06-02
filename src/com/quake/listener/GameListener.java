@@ -4,10 +4,12 @@ import com.quake.Main;
 import com.quake.PlayerEffect;
 import com.quake.UserInterface;
 import com.quake.block.PlayerSpawnBlock;
+import com.quake.item.Weapon;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -27,7 +29,7 @@ public class GameListener implements Listener {
         clearInventory(player);
         clearArmor(player);
         player.setHealth(20d);
-        new Weapon().pickUp(player,  Weapon.getSword());
+        new Weapon().pickUp(player, Weapon.getSword());
         player.teleport(getRandomSpawnBlock().getBlock().getLocation());
     }
 
