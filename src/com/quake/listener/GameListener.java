@@ -5,11 +5,14 @@ import com.quake.PlayerEffect;
 import com.quake.UserInterface;
 import com.quake.block.PlayerSpawnBlock;
 import com.quake.item.Weapon;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -30,7 +33,11 @@ public class GameListener implements Listener {
         clearArmor(player);
         player.setHealth(20d);
         new Weapon().pickUp(player, Weapon.getSword());
-        player.teleport(getRandomSpawnBlock().getBlock().getLocation());
+        PlayerSpawnBlock b = getRandomSpawnBlock();
+
+        if (b != null){
+            player.teleport(b.getBlock().getLocation());
+        }
     }
 
     public GameListener(Plugin plugin) {
@@ -71,6 +78,14 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
+    public void onExplosionPrime(ExplosionPrimeEvent event) {
+        Entity ent = event.getEntity();
+        if (ent instanceof Fireball) {
+            event.setRadius(3F);
+        }
+    }
+
+    @EventHandler
     public void PickUpArrow(PlayerPickupArrowEvent event) {
         event.getArrow().remove();
         event.setCancelled(true);
@@ -88,6 +103,9 @@ public class GameListener implements Listener {
         player.getInventory().setBoots(null);
     }
     private PlayerSpawnBlock getRandomSpawnBlock(){
-       return Main.getPlayerSpawnBlocks().get((int) (Math.random() * Main.getPlayerSpawnBlocks().size()));
+        if (Main.getPlayerSpawnBlocks().size() == 0){
+            return null;
+        }
+        return Main.getPlayerSpawnBlocks().get((int) (Math.random() * Main.getPlayerSpawnBlocks().size()));
     }
 }

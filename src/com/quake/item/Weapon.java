@@ -87,11 +87,12 @@ public class Weapon implements Item {
 
     @Override
     public void pickUp(Player player, ItemStack itemStack) {
-        if (!Item.itemIsExist(player.getInventory(), itemStack)) {
-            player.getInventory().addItem(itemStack);
-        }
         if (itemStack.getItemMeta().getDisplayName().equals(Type.DIAMOND_SWORD.toString())) {
             return;
+        }
+
+        if (!Item.itemIsExist(player.getInventory(), itemStack)) {
+            player.getInventory().addItem(itemStack);
         }
 
         for (Type type : Type.values()) {
@@ -145,10 +146,8 @@ public class Weapon implements Item {
                 fractionShot(Snowball.class, 0.1d, player);
                 break;
             case DIAMOND_HOE:
-                Fireball fireball = player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection().multiply(2));
-                Main.log.info("Here - " + fireball.doesBounce());
+                Fireball fireball = player.launchProjectile(Fireball.class, player.getEyeLocation().getDirection().normalize().multiply(2));
                 fireball.setIsIncendiary(false);
-                fireball.setBounce(false);
                 break;
             case DIAMOND_PICKAXE:
                 player.launchProjectile(Arrow.class, player.getEyeLocation().getDirection().multiply(20));
