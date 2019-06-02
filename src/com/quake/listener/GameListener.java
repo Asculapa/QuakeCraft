@@ -27,6 +27,7 @@ public class GameListener implements Listener {
         clearInventory(player);
         clearArmor(player);
         player.setHealth(20d);
+        new Weapon().pickUp(player,  Weapon.getSword());
         player.teleport(getRandomSpawnBlock().getBlock().getLocation());
     }
 
