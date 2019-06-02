@@ -118,7 +118,7 @@ public class Weapon implements Item {
         return null;
     }
 
-    private ItemStack getSword() {
+    public static ItemStack getSword() {
         ItemStack itemStack = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = itemStack.getItemMeta();
         meta.addEnchant(Enchantment.KNOCKBACK, knockbackLevel, true);
