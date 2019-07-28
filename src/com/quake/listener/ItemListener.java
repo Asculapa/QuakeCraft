@@ -1,5 +1,6 @@
 package com.quake.listener;
 
+import com.quake.Main;
 import com.quake.UserInterface;
 import com.quake.item.Armor;
 import com.quake.item.Health;
@@ -144,6 +145,7 @@ public class ItemListener implements Listener {
         } else if (valueIsExist(Weapon.Type.values(), item.getItemStack().getType().name())) {
             Weapon weapon = new Weapon();
             weapon.pickUp(player, item.getItemStack());
+            Main.log.info("Test");
         }
 
         Weapon.setAmmo(item.getItemStack(), player);

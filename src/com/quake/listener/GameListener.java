@@ -111,6 +111,9 @@ public class GameListener implements Listener {
         player.getInventory().setBoots(null);
     }
     private PlayerSpawnBlock getRandomSpawnBlock(){
+        if (Main.getPlayerSpawnBlocks().size() == 0){
+            return null;
+        }
         return Main.getPlayerSpawnBlocks().get((int) (Math.random() * Main.getPlayerSpawnBlocks().size()));
     }
 }

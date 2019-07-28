@@ -87,12 +87,13 @@ public class Weapon implements Item {
 
     @Override
     public void pickUp(Player player, ItemStack itemStack) {
-        if (itemStack.getItemMeta().getDisplayName().equals(Type.DIAMOND_SWORD.toString())) {
-            return;
-        }
 
         if (!Item.itemIsExist(player.getInventory(), itemStack)) {
             player.getInventory().addItem(itemStack);
+        }
+
+        if (itemStack.getItemMeta().getDisplayName().equals(Type.DIAMOND_SWORD.toString())) {
+            return;
         }
 
         for (Type type : Type.values()) {
