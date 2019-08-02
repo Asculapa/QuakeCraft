@@ -50,6 +50,9 @@ public final class UserInterface {
 
     public static void resetScoreBoard(Player player) {
         for (Weapon.Type t : Weapon.Type.values()) {
+            if (t == Weapon.Type.DIAMOND_SWORD) {
+                continue;
+            }
             player.getScoreboard().getObjective(resources).getScore(t.toString()).setScore(0);
         }
     }

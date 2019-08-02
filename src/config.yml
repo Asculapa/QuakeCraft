@@ -5,9 +5,9 @@ middleHealth: 5
 hugeHealth: 10
 attackDelay: 25
 shovelDamage: 4.5
-hoeDamage: 12
+hoeDamage: 10
 pickaxeDamage: 8
-explosionRadius: 3
+explosionRadius: 2
 sword: "Excalibur"
 shovel: "ShoutGun"
 hoe: "Bazooka"

@@ -45,8 +45,8 @@ public class ItemListener implements Listener {
 
     public static void build(ReadConfig readConfig){
         double sd = readConfig.getDoubleValue("shovelDamage");
-        double hd = readConfig.getDoubleValue("shovelDamage");
-        double pd = readConfig.getDoubleValue("shovelDamage");
+        double hd = readConfig.getDoubleValue("hoeDamage");
+        double pd = readConfig.getDoubleValue("pickaxeDamage");
 
         if (sd != 0){
             shovelDamage = sd;
@@ -145,7 +145,6 @@ public class ItemListener implements Listener {
         } else if (valueIsExist(Weapon.Type.values(), item.getItemStack().getType().name())) {
             Weapon weapon = new Weapon();
             weapon.pickUp(player, item.getItemStack());
-            Main.log.info("Test");
         }
 
         Weapon.setAmmo(item.getItemStack(), player);

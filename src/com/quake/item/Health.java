@@ -43,7 +43,6 @@ public class Health implements Item {
 
     @Override
     public void pickUp(Player player, ItemStack itemStack) {
-        Main.log.info("pic" + middleHealth);
         switch (Type.valueOf(itemStack.getItemMeta().getDisplayName())) {
             case SMALL:
                 player.setHealth(getHealth(player, smallHealth));

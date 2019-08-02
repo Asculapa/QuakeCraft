@@ -21,7 +21,7 @@ import org.bukkit.plugin.Plugin;
 public class GameListener implements Listener {
 
     private Plugin plugin;
-    private static float explosionDamage = 3F;
+    private static float explosionDamage = 2F;
 
     public static void build(ReadConfig readConfig){
         double f = readConfig.getDoubleValue("explosionRadius");
@@ -82,6 +82,7 @@ public class GameListener implements Listener {
             PlayerSpawnBlock block = getRandomSpawnBlock();
             event.setRespawnLocation(block.getBlock().getLocation().add(0.5d, 0, 0.5d));
         }
+        new Weapon().pickUp(player, Weapon.getSword());
         setDefaultEffects(event.getPlayer());
     }
 
